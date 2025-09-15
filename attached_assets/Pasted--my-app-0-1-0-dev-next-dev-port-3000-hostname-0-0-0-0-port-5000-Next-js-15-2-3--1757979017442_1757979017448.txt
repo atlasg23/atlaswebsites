@@ -1,0 +1,45 @@
+
+> my-app@0.1.0 dev
+> next dev --port 3000 --hostname 0.0.0.0 --port 5000
+
+   ▲ Next.js 15.2.3
+   - Local:        http://localhost:5000
+   - Network:      http://0.0.0.0:5000
+
+ ✓ Starting...
+ ✓ Ready in 1500ms
+ ○ Compiling / ...
+ ✓ Compiled / in 3.1s (362 modules)
+Warning: data for page "/" is 1.84 MB which exceeds the threshold of 128 kB, this amount of data can reduce performance.
+See more info here: https://nextjs.org/docs/messages/large-page-data
+ GET / 200 in 4044ms
+Warning: data for page "/" is 1.84 MB which exceeds the threshold of 128 kB, this amount of data can reduce performance.
+See more info here: https://nextjs.org/docs/messages/large-page-data
+ GET / 200 in 460ms
+Warning: data for page "/" is 1.84 MB which exceeds the threshold of 128 kB, this amount of data can reduce performance.
+See more info here: https://nextjs.org/docs/messages/large-page-data
+ GET / 200 in 459ms
+ ○ Compiling /plumbing1/[slug] ...
+ ✓ Compiled /plumbing1/[slug] in 647ms (370 modules)
+ ✓ Compiled /_error in 472ms (414 modules)
+ GET /plumbing1/prestigeplumbingrepairllc 404 in 2302ms
+ GET /plumbing1/prestigeplumbingrepairllc 404 in 728ms
+Warning: data for page "/" is 1.84 MB which exceeds the threshold of 128 kB, this amount of data can reduce performance.
+See more info here: https://nextjs.org/docs/messages/large-page-data
+ GET / 200 in 454ms
+ ✓ Compiled in 149ms (362 modules)
+ ✓ Compiled /plumbing1/[slug] in 212ms (370 modules)
+ ✓ Compiled /_error in 113ms (414 modules)
+ GET /plumbing1/prestigeplumbingrepairllc 404 in 868ms
+ ✓ Compiled in 89ms (105 modules)
+ ✓ Compiled in 42ms (105 modules)
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 2 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be commong to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+ GET /plumbing1/prestigeplumbingrepairllc 200 in 289ms
+ ○ Compiling /plumbing2/[slug] ...
+ ✓ Compiled /plumbing2/[slug] in 864ms (340 modules)
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 2 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be commong to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+ GET /plumbing2/prestigeplumbingrepairllc 200 in 1151ms
+ ✓ Compiled in 257ms (340 modules)
+ ✓ Compiled in 230ms (340 modules)
+ GET /plumbing1/allplumbing 200 in 253ms
+ GET /plumbing2/allplumbing 200 in 234ms
