@@ -110,6 +110,10 @@ GOOGLE_MAPS_API_KEY = "AIzaSyDJe6jp7mNRZm-dAGFAMrSSADU5KwD0vtc"
 # Read the CSV file
 df = pd.read_csv('plumbing-la (1)_1757975155716.csv')
 
+# For testing, limit to first 10 rows
+df = df.head(10)
+print(f"Testing with first 10 rows only")
+
 # Define the columns to keep
 columns_to_keep = [
     'name',
