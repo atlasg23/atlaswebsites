@@ -1,5 +1,5 @@
 
-import { GetStaticProps, GetStaticPaths } from 'next';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { getBusinessBySlug, getAllBusinesses, PlumbingBusiness } from '../../lib/csvReader';
 
@@ -354,19 +354,7 @@ export default function Plumbing2({ business }: Props) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const businesses = getAllBusinesses();
-  const paths = businesses.map((business) => ({
-    params: { slug: business.slug }
-  }));
-
-  return {
-    paths,
-    fallback: false
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const business = getBusinessBySlug(params?.slug as string);
 
   if (!business) {

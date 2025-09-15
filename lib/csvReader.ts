@@ -35,24 +35,61 @@ export interface PlumbingBusiness {
   slug: string;
 }
 
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  let i = 0;
+  
+  while (i < line.length) {
+    const char = line[i];
+    
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        // Escaped quote
+        current += '"';
+        i += 2;
+      } else {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+        i++;
+      }
+    } else if (char === ',' && !inQuotes) {
+      // End of field
+      result.push(current);
+      current = '';
+      i++;
+    } else {
+      current += char;
+      i++;
+    }
+  }
+  
+  // Add the last field
+  result.push(current);
+  return result;
+}
+
 export function getBusinessBySlug(slug: string): PlumbingBusiness | null {
   try {
     const csvPath = path.join(process.cwd(), 'filtered_plumbing_data.csv');
     const csvData = fs.readFileSync(csvPath, 'utf-8');
     
     const lines = csvData.split('\n');
-    const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+    const headers = parseCSVLine(lines[0]);
     
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.replace(/"/g, ''));
-      const business: any = {};
-      
-      headers.forEach((header, index) => {
-        business[header] = values[index] || '';
-      });
-      
-      if (business.slug === slug) {
-        return business as PlumbingBusiness;
+      if (lines[i].trim()) {
+        const values = parseCSVLine(lines[i]);
+        const business: any = {};
+        
+        headers.forEach((header, index) => {
+          business[header] = values[index] || '';
+        });
+        
+        if (business.slug === slug) {
+          return business as PlumbingBusiness;
+        }
       }
     }
     
@@ -69,12 +106,12 @@ export function getAllBusinesses(): PlumbingBusiness[] {
     const csvData = fs.readFileSync(csvPath, 'utf-8');
     
     const lines = csvData.split('\n');
-    const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+    const headers = parseCSVLine(lines[0]);
     const businesses: PlumbingBusiness[] = [];
     
     for (let i = 1; i < lines.length; i++) {
       if (lines[i].trim()) {
-        const values = lines[i].split(',').map(v => v.replace(/"/g, ''));
+        const values = parseCSVLine(lines[i]);
         const business: any = {};
         
         headers.forEach((header, index) => {
