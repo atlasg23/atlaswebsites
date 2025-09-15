@@ -14,7 +14,7 @@ export default function Plumbing1({ business }: Props) {
   return (
     <>
       <Head>
-        <title>{business.name} - Professional Plumbing Services</title>
+        <title>{`${business.name} - Professional Plumbing Services`}</title>
         <meta name="description" content={`${business.name} provides professional plumbing services in ${business.city}, ${business.state}. Call ${business.phone} for reliable plumbing solutions.`} />
       </Head>
 
