@@ -192,14 +192,40 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
         }
 
         .review-card {
-          min-width: 300px;
+          min-width: 320px;
           flex: 0 0 auto;
+          animation: slideInUp 0.8s ease-out forwards;
+          opacity: 0;
+          transform: translateY(30px);
         }
 
         @media (min-width: 768px) {
           .review-card {
-            min-width: 400px;
+            min-width: 420px;
           }
+        }
+
+        .review-card:nth-child(1) { animation-delay: 0.1s; }
+        .review-card:nth-child(2) { animation-delay: 0.2s; }
+        .review-card:nth-child(3) { animation-delay: 0.3s; }
+        .review-card:nth-child(4) { animation-delay: 0.4s; }
+        .review-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes slideInUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes pulse-slow {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
 
         .reviews-container {
@@ -207,6 +233,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
           -ms-overflow-style: none;
+          scroll-snap-type: x mandatory;
         }
 
         .reviews-container::-webkit-scrollbar {
@@ -214,7 +241,54 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
         }
 
         .review-dots {
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-dots:hover {
+          transform: scale(1.2);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .animate-fade-in {
+          animation: fadeInUp 1s ease-out;
+        }
+
+        .animate-slide-up {
+          animation: slideUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .shadow-3xl {
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .line-clamp-4 {
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
 
@@ -815,23 +889,67 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
 
         {/* Reviews Section - Only show if 3+ five-star reviews */}
         {reviews.length >= 3 && (
-          <section className="py-20 px-6 bg-white">
-            <div className="max-w-7xl mx-auto">
-              {/* Section Header */}
-              <div className="text-center mb-12">
-                <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
+          <section className="py-20 px-6 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+            {/* Decorative Background Elements */}
+            <div className="absolute top-10 left-10 w-32 h-32 bg-blue-100 rounded-full opacity-20 animate-float"></div>
+            <div className="absolute bottom-20 right-20 w-24 h-24 bg-indigo-100 rounded-full opacity-30 animate-float" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-purple-100 rounded-full opacity-25 animate-float" style={{ animationDelay: '4s' }}></div>
+
+            <div className="max-w-7xl mx-auto relative z-10">
+              {/* Section Header with enhanced animations */}
+              <div className="text-center mb-16">
+                {/* Floating review icon */}
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 animate-pulse" style={{ backgroundColor: `${primaryColor}15` }}>
+                  <div className="flex space-x-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="w-6 h-6 text-yellow-400 animate-bounce"
+                        style={{ animationDelay: `${i * 0.1}s` }}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <h2 className="text-4xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent animate-fade-in">
                   What Our Customers Say
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Real reviews from satisfied customers in {business.city} and surrounding areas
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed animate-slide-up">
+                  Real reviews from satisfied customers in {business.city} and surrounding areas who trust our professional plumbing services
                 </p>
+                
+                {/* Trust indicators */}
+                <div className="flex items-center justify-center space-x-8 mt-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-semibold">Verified Reviews</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="font-semibold">{business.rating}★ Average</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <svg className="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                    </svg>
+                    <span className="font-semibold">{business.reviews}+ Happy Customers</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Reviews Carousel */}
+              {/* Enhanced Reviews Carousel */}
               <div className="relative">
                 <div
                   ref={reviewsContainerRef}
-                  className="reviews-container flex gap-6 overflow-x-auto pb-8"
+                  className="reviews-container flex gap-8 overflow-x-auto pb-8 snap-x snap-mandatory"
                   onScroll={(e) => {
                     const container = e.currentTarget;
                     const scrollPercentage = container.scrollLeft / (container.scrollWidth - container.clientWidth);
@@ -842,14 +960,33 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                   {reviews.slice(0, 5).map((review, index) => (
                     <div
                       key={review.review_id || index}
-                      className="review-card bg-white rounded-xl shadow-lg p-6 hover-lift border border-gray-100"
+                      className="review-card bg-white rounded-2xl shadow-xl p-8 hover-lift border border-gray-100 relative overflow-hidden group snap-start"
+                      style={{ 
+                        animationDelay: `${index * 0.2}s`,
+                        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
+                      }}
                     >
-                      {/* Stars */}
-                      <div className="flex items-center mb-4">
+                      {/* Decorative corner */}
+                      <div 
+                        className="absolute top-0 right-0 w-16 h-16 transform rotate-45 translate-x-8 -translate-y-8 opacity-10"
+                        style={{ backgroundColor: primaryColor }}
+                      ></div>
+
+                      {/* Quote mark */}
+                      <div className="absolute top-4 left-4 text-6xl font-serif opacity-10" style={{ color: primaryColor }}>
+                        "
+                      </div>
+
+                      {/* Stars with enhanced animation */}
+                      <div className="flex items-center mb-6 relative z-10">
                         {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className="w-5 h-5 text-yellow-400"
+                            className="w-6 h-6 text-yellow-400 transform transition-all duration-300 hover:scale-125"
+                            style={{ 
+                              animationDelay: `${i * 0.1}s`,
+                              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+                            }}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -858,110 +995,135 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                         ))}
                       </div>
 
-                      {/* Review Text */}
+                      {/* Review Text with better typography */}
                       {review.review_text && (
-                        <p className="text-gray-700 mb-4 line-clamp-4 leading-relaxed">
+                        <blockquote className="text-gray-700 mb-6 line-clamp-4 leading-relaxed text-lg font-medium italic relative z-10">
                           "{review.review_text}"
-                        </p>
+                        </blockquote>
                       )}
 
-                      {/* Reviewer Name & Date */}
-                      <div className="mt-auto">
-                        <p className="font-semibold text-gray-900">
-                          {review.reviewer_name}
-                        </p>
-                        {review.published_at && (
-                          <p className="text-sm text-gray-500">
-                            {review.published_at}
-                          </p>
-                        )}
-                        {review.is_local_guide && (
-                          <p className="text-xs text-blue-600 mt-1">
-                            <svg className="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                            Local Guide
-                          </p>
-                        )}
+                      {/* Reviewer Info with enhanced design */}
+                      <div className="mt-auto relative z-10">
+                        <div className="flex items-center space-x-4">
+                          {/* Avatar placeholder */}
+                          <div 
+                            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
+                            style={{ backgroundColor: primaryColor }}
+                          >
+                            {review.reviewer_name?.charAt(0)?.toUpperCase() || 'A'}
+                          </div>
+                          
+                          <div className="flex-1">
+                            <p className="font-bold text-gray-900 text-lg">
+                              {review.reviewer_name}
+                            </p>
+                            <div className="flex items-center space-x-2">
+                              {review.published_at && (
+                                <p className="text-sm text-gray-500">
+                                  {review.published_at}
+                                </p>
+                              )}
+                              {review.is_local_guide && (
+                                <div className="flex items-center space-x-1 bg-blue-50 px-2 py-1 rounded-full">
+                                  <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                  </svg>
+                                  <span className="text-xs font-semibold text-blue-600">Local Guide</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
+
+                      {/* Hover effect overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
                     </div>
                   ))}
                 </div>
 
-                {/* Navigation Arrows for Desktop */}
+                {/* Enhanced Navigation Arrows */}
                 <button
                   onClick={() => {
                     if (reviewsContainerRef.current) {
                       const cardWidth = reviewsContainerRef.current.querySelector('.review-card')?.clientWidth || 400;
-                      reviewsContainerRef.current.scrollLeft -= cardWidth + 24;
+                      reviewsContainerRef.current.scrollLeft -= cardWidth + 32;
                     }
                   }}
-                  className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full shadow-lg items-center justify-center bg-white hover:shadow-xl transition-all"
-                  style={{ borderColor: primaryColor, borderWidth: '2px' }}
+                  className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 w-14 h-14 rounded-full shadow-2xl items-center justify-center bg-white hover:shadow-3xl transition-all duration-300 group border-2 hover:scale-110"
+                  style={{ borderColor: primaryColor }}
                 >
-                  <svg className="w-6 h-6" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <svg className="w-7 h-7 transition-transform group-hover:-translate-x-1" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
                 <button
                   onClick={() => {
                     if (reviewsContainerRef.current) {
                       const cardWidth = reviewsContainerRef.current.querySelector('.review-card')?.clientWidth || 400;
-                      reviewsContainerRef.current.scrollLeft += cardWidth + 24;
+                      reviewsContainerRef.current.scrollLeft += cardWidth + 32;
                     }
                   }}
-                  className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 rounded-full shadow-lg items-center justify-center bg-white hover:shadow-xl transition-all"
-                  style={{ borderColor: primaryColor, borderWidth: '2px' }}
+                  className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 w-14 h-14 rounded-full shadow-2xl items-center justify-center bg-white hover:shadow-3xl transition-all duration-300 group border-2 hover:scale-110"
+                  style={{ borderColor: primaryColor }}
                 >
-                  <svg className="w-6 h-6" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg className="w-7 h-7 transition-transform group-hover:translate-x-1" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
               </div>
 
-              {/* Dots Indicator */}
+              {/* Enhanced Dots Indicator */}
               {reviews.length > 1 && (
-                <div className="flex justify-center space-x-2 mt-6">
+                <div className="flex justify-center space-x-3 mt-12">
                   {reviews.slice(0, 5).map((_, index) => (
                     <button
                       key={index}
                       onClick={() => {
                         if (reviewsContainerRef.current) {
                           const cardWidth = reviewsContainerRef.current.querySelector('.review-card')?.clientWidth || 400;
-                          reviewsContainerRef.current.scrollLeft = index * (cardWidth + 24);
+                          reviewsContainerRef.current.scrollLeft = index * (cardWidth + 32);
                           setCurrentReviewIndex(index);
                         }
                       }}
-                      className="review-dots w-2 h-2 rounded-full transition-all"
+                      className="review-dots rounded-full transition-all duration-300 hover:scale-125 focus:outline-none focus:ring-4 focus:ring-opacity-50 shadow-lg"
                       style={{
                         backgroundColor: index === currentReviewIndex ? primaryColor : '#CBD5E0',
-                        width: index === currentReviewIndex ? '24px' : '8px'
+                        width: index === currentReviewIndex ? '32px' : '12px',
+                        height: '12px',
+                        focusRingColor: `${primaryColor}50`
                       }}
                     />
                   ))}
                 </div>
               )}
 
-              {/* View More Reviews Button */}
+              {/* Enhanced View More Reviews Button */}
               {business.reviews_link && (
-                <div className="text-center mt-12">
+                <div className="text-center mt-16">
                   <a
                     href={business.reviews_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift shadow-lg"
+                    className="inline-flex items-center px-10 py-5 rounded-full font-bold text-lg transition-all hover-lift shadow-2xl group relative overflow-hidden"
                     style={{
                       backgroundColor: 'white',
                       color: primaryColor,
-                      borderWidth: '2px',
+                      borderWidth: '3px',
                       borderColor: primaryColor
                     }}
                   >
-                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    {/* Button background animation */}
+                    <div 
+                      className="absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 rounded-full"
+                      style={{ backgroundColor: primaryColor }}
+                    ></div>
+                    
+                    <svg className="w-6 h-6 mr-3 relative z-10 transition-colors group-hover:text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
                       <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
                     </svg>
-                    View More Reviews on Google
+                    <span className="relative z-10 transition-colors group-hover:text-white">View More Reviews on Google</span>
                   </a>
                 </div>
               )}
