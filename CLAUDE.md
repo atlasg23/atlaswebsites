@@ -1,9 +1,59 @@
 # Business Directory Platform - Project Documentation
 
-## Latest Update: Template Editor System (Template 3)
+## Latest Update: Fixed Template Versioning System (Migrations 012-016)
+
+### Current Migration State: 016_cleanup_duplicates.sql
 
 ### Current Status
-We've built a professional visual website editor system for customizing business templates. The editor allows real-time editing of business landing pages with auto-save functionality.
+We've built a professional visual website editor system for customizing business templates. The editor allows real-time editing of business landing pages with a robust versioning system.
+
+### How to Work on This Project
+
+#### Making Changes Without Migrations
+For code-only changes (UI, logic, styling):
+1. Make your changes to the code
+2. Test thoroughly
+3. Commit with descriptive message:
+   ```bash
+   git add .
+   git commit -m "Brief description of what changed
+
+   Details:
+   - Specific change 1
+   - Specific change 2
+
+   🤖 Generated with [Claude Code](https://claude.ai/code)
+
+   Co-Authored-By: Claude <noreply@anthropic.com>"
+   git push
+   ```
+
+#### Making Changes WITH Database Migrations
+When database changes are needed:
+1. Create migration file: `scripts/db/XXX_description.sql`
+2. Run migration: `npm run db:migrate`
+3. Test the changes
+4. Commit with migration info:
+   ```bash
+   git add .
+   git commit -m "Feature description (Migration XXX)
+
+   Database changes:
+   - Migration XXX: What it does
+
+   Code changes:
+   - What code was modified
+
+   🤖 Generated with [Claude Code](https://claude.ai/code)
+
+   Co-Authored-By: Claude <noreply@anthropic.com>"
+   git push
+   ```
+
+#### Current Migration Status
+- **Latest Migration:** 016_cleanup_duplicates.sql
+- **Next Migration Number:** 017
+- **Database State:** Clean versioning system with UUID linking
 
 ### Key Components
 
