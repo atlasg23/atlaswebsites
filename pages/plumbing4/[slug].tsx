@@ -245,26 +245,24 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
             {/* Mobile Layout */}
             <div className="md:hidden">
               <div className="flex items-center justify-between">
-                {/* Logo and Phone stacked */}
-                <div className="flex flex-col items-center flex-1">
-                  <img
-                    src={getDeviceValue('logo', 'https://lh3.googleusercontent.com/p/AF1QipNBZ-ioMORTJBCHFQCRRT7BEm8rIwMYAD5UETHB=s680-w680-h510-rw')}
-                    alt={`${business.name} Logo`}
-                    className="h-16 w-16 object-contain rounded mb-1"
-                  />
-                  <a
-                    href={`tel:${business.phone}`}
-                    className={`text-base font-bold ${
-                      isScrolled ? 'text-gray-900' : 'text-white text-shadow'
-                    }`}>
-                    {business.phone}
-                  </a>
+                {/* Business Name and Phone */}
+                <div className="text-center">
+                  <h1 className={`text-lg font-bold ${
+                    isScrolled ? 'text-gray-900' : 'text-white text-shadow'
+                  }`}>
+                    {business.name}
+                  </h1>
+                  <p className={`text-sm ${
+                    isScrolled ? 'text-gray-600' : 'text-gray-200'
+                  }`}>
+                    {business.phone} • {business.city}, {business.state}
+                  </p>
                 </div>
 
                 {/* Mobile Menu Button */}
                 <button
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="p-2 rounded-lg absolute right-4"
+                  className="p-2 rounded-lg"
                   style={{ backgroundColor: showMobileMenu ? primaryColor : 'transparent' }}
                 >
                   <div className={`w-6 h-0.5 mb-1 transition-all ${showMobileMenu ? 'bg-white' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
@@ -294,21 +292,19 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
 
             {/* Desktop Layout */}
             <div className="hidden md:flex items-center justify-between">
-              {/* Logo and Phone */}
+              {/* Business Name & Info */}
               <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={getDeviceValue('logo', 'https://lh3.googleusercontent.com/p/AF1QipNBZ-ioMORTJBCHFQCRRT7BEm8rIwMYAD5UETHB=s680-w680-h510-rw')}
-                    alt={`${business.name} Logo`}
-                    className="h-14 w-14 object-contain rounded"
-                  />
-                  <a
-                    href={`tel:${business.phone}`}
-                    className={`text-xl font-bold ${
-                      isScrolled ? 'text-gray-900' : 'text-white text-shadow'
-                    }`}>
+                <div className="text-center">
+                  <h1 className={`text-xl font-bold ${
+                    isScrolled ? 'text-gray-900' : 'text-white text-shadow'
+                  }`}>
+                    {business.name}
+                  </h1>
+                  <p className={`text-sm ${
+                    isScrolled ? 'text-gray-600' : 'text-gray-200'
+                  }`}>
                     {business.phone}
-                  </a>
+                  </p>
                 </div>
 
                 {/* Rating Display - Show only if 5+ stars AND 10+ reviews */}
