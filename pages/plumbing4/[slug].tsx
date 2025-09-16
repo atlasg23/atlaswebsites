@@ -162,56 +162,54 @@ export default function Plumbing4({ business, customization }: Props) {
           <div className="max-w-7xl mx-auto px-4">
             {/* Mobile Layout */}
             <div className="md:hidden">
-              {/* Top Row: Business Name */}
-              <div className="flex items-center justify-between mb-2">
-                <h1 className={`text-lg font-bold ${
-                  isScrolled ? 'text-gray-900' : 'text-white text-shadow'
-                }`}>
-                  {business.name}
-                </h1>
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col space-y-2">
+                  {/* Business Name */}
+                  <h1 className={`text-lg font-bold ${
+                    isScrolled ? 'text-gray-900' : 'text-white text-shadow'
+                  }`}>
+                    {business.name}
+                  </h1>
+                  
+                  {/* Phone Number */}
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="px-3 py-1 rounded-full font-semibold text-sm transition-all w-fit"
+                    style={{ 
+                      backgroundColor: primaryColor,
+                      color: 'white'
+                    }}
+                  >
+                    {business.phone}
+                  </a>
+                  
+                  {/* Rating Display - Show only if 4.5+ stars */}
+                  {parseFloat(business.rating) >= 4.5 && (
+                    <div className={`flex items-center space-x-2 ${
+                      isScrolled ? 'text-gray-700' : 'text-white'
+                    }`}>
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={`text-yellow-400 text-sm ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                      {/* Show count only if 10+ reviews */}
+                      {parseInt(business.reviews) >= 10 && (
+                        <span className="text-xs font-medium">
+                          {business.rating} ({business.reviews})
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <button className="p-2">
                   <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
                   <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
                   <div className={`w-6 h-0.5 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
                 </button>
-              </div>
-              
-              {/* Bottom Row: Rating and Phone */}
-              <div className="flex items-center justify-between">
-                {/* Rating Display - Show only if 4.5+ stars */}
-                {parseFloat(business.rating) >= 4.5 ? (
-                  <div className={`flex items-center space-x-2 ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  }`}>
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <span key={i} className={`text-yellow-400 text-sm ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                    {/* Show count only if 10+ reviews */}
-                    {parseInt(business.reviews) >= 10 && (
-                      <span className="text-xs font-medium">
-                        {business.rating} ({business.reviews})
-                      </span>
-                    )}
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-
-                {/* Phone Button */}
-                <a
-                  href={`tel:${business.phone}`}
-                  className="px-4 py-2 rounded-full font-semibold text-sm transition-all"
-                  style={{ 
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  {business.phone}
-                </a>
               </div>
             </div>
 
@@ -359,15 +357,7 @@ export default function Plumbing4({ business, customization }: Props) {
             </div>
           </div>
 
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
-            <div className="flex flex-col items-center space-y-2">
-              <span className="text-sm opacity-75">Scroll to explore</span>
-              <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-                <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
-              </div>
-            </div>
-          </div>
+          
         </section>
 
         {/* Placeholder for future sections */}
