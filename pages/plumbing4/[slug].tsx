@@ -1223,7 +1223,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                           return Object.entries(hours).map(([day, time]) => (
                             <div key={day} className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
                               <span className="font-medium text-gray-900">{day}</span>
-                              <span className="text-gray-600">{time}</span>
+                              <span className="text-gray-600">{String(time)}</span>
                             </div>
                           ));
                         } catch {
