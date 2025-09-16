@@ -1,20 +1,23 @@
 
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { getBusinessBySlug, PlumbingBusiness } from '../../lib/supabaseReader';
+import { useEffect, useState, useRef } from 'react';
+import { getBusinessBySlug, getBusinessReviews, PlumbingBusiness, GoogleReview } from '../../lib/supabaseReader';
 import { getTemplateCustomization, TemplateCustomization } from '../../lib/templateCustomizations';
 
 interface Props {
   business: PlumbingBusiness;
   customization: TemplateCustomization | null;
+  reviews: GoogleReview[];
 }
 
-export default function Plumbing4({ business, customization }: Props) {
+export default function Plumbing4({ business, customization, reviews }: Props) {
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showServicesDropdown, setShowServicesDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+  const reviewsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check if mobile device
@@ -186,6 +189,32 @@ export default function Plumbing4({ business, customization }: Props) {
 
         .mobile-menu.show {
           max-height: 500px;
+        }
+
+        .review-card {
+          min-width: 300px;
+          flex: 0 0 auto;
+        }
+
+        @media (min-width: 768px) {
+          .review-card {
+            min-width: 400px;
+          }
+        }
+
+        .reviews-container {
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .reviews-container::-webkit-scrollbar {
+          display: none;
+        }
+
+        .review-dots {
+          transition: all 0.3s ease;
         }
       `}</style>
 
@@ -784,6 +813,162 @@ export default function Plumbing4({ business, customization }: Props) {
           </div>
         </section>
 
+        {/* Reviews Section - Only show if 3+ five-star reviews */}
+        {reviews.length >= 3 && (
+          <section className="py-20 px-6 bg-white">
+            <div className="max-w-7xl mx-auto">
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
+                  What Our Customers Say
+                </h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                  Real reviews from satisfied customers in {business.city} and surrounding areas
+                </p>
+              </div>
+
+              {/* Reviews Carousel */}
+              <div className="relative">
+                <div
+                  ref={reviewsContainerRef}
+                  className="reviews-container flex gap-6 overflow-x-auto pb-8"
+                  onScroll={(e) => {
+                    const container = e.currentTarget;
+                    const scrollPercentage = container.scrollLeft / (container.scrollWidth - container.clientWidth);
+                    const index = Math.round(scrollPercentage * (Math.min(reviews.length, 5) - 1));
+                    setCurrentReviewIndex(index);
+                  }}
+                >
+                  {reviews.slice(0, 5).map((review, index) => (
+                    <div
+                      key={review.review_id || index}
+                      className="review-card bg-white rounded-xl shadow-lg p-6 hover-lift border border-gray-100"
+                    >
+                      {/* Stars */}
+                      <div className="flex items-center mb-4">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-5 h-5 text-yellow-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+
+                      {/* Review Text */}
+                      {review.review_text && (
+                        <p className="text-gray-700 mb-4 line-clamp-4 leading-relaxed">
+                          "{review.review_text}"
+                        </p>
+                      )}
+
+                      {/* Reviewer Name & Date */}
+                      <div className="mt-auto">
+                        <p className="font-semibold text-gray-900">
+                          {review.reviewer_name}
+                        </p>
+                        {review.published_at && (
+                          <p className="text-sm text-gray-500">
+                            {review.published_at}
+                          </p>
+                        )}
+                        {review.is_local_guide && (
+                          <p className="text-xs text-blue-600 mt-1">
+                            <svg className="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            Local Guide
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Navigation Arrows for Desktop */}
+                <button
+                  onClick={() => {
+                    if (reviewsContainerRef.current) {
+                      const cardWidth = reviewsContainerRef.current.querySelector('.review-card')?.clientWidth || 400;
+                      reviewsContainerRef.current.scrollLeft -= cardWidth + 24;
+                    }
+                  }}
+                  className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full shadow-lg items-center justify-center bg-white hover:shadow-xl transition-all"
+                  style={{ borderColor: primaryColor, borderWidth: '2px' }}
+                >
+                  <svg className="w-6 h-6" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => {
+                    if (reviewsContainerRef.current) {
+                      const cardWidth = reviewsContainerRef.current.querySelector('.review-card')?.clientWidth || 400;
+                      reviewsContainerRef.current.scrollLeft += cardWidth + 24;
+                    }
+                  }}
+                  className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 rounded-full shadow-lg items-center justify-center bg-white hover:shadow-xl transition-all"
+                  style={{ borderColor: primaryColor, borderWidth: '2px' }}
+                >
+                  <svg className="w-6 h-6" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Dots Indicator */}
+              {reviews.length > 1 && (
+                <div className="flex justify-center space-x-2 mt-6">
+                  {reviews.slice(0, 5).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        if (reviewsContainerRef.current) {
+                          const cardWidth = reviewsContainerRef.current.querySelector('.review-card')?.clientWidth || 400;
+                          reviewsContainerRef.current.scrollLeft = index * (cardWidth + 24);
+                          setCurrentReviewIndex(index);
+                        }
+                      }}
+                      className="review-dots w-2 h-2 rounded-full transition-all"
+                      style={{
+                        backgroundColor: index === currentReviewIndex ? primaryColor : '#CBD5E0',
+                        width: index === currentReviewIndex ? '24px' : '8px'
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* View More Reviews Button */}
+              {business.reviews_link && (
+                <div className="text-center mt-12">
+                  <a
+                    href={business.reviews_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift shadow-lg"
+                    style={{
+                      backgroundColor: 'white',
+                      color: primaryColor,
+                      borderWidth: '2px',
+                      borderColor: primaryColor
+                    }}
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                    </svg>
+                    View More Reviews on Google
+                  </a>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* Contact Section with Form */}
         <section id="contact" className="py-20 px-6 relative overflow-hidden">
           {/* Background with gradient */}
@@ -1273,10 +1458,17 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   const customization = await getTemplateCustomization(slug);
 
+  // Fetch Google Reviews if place_id exists
+  let reviews: GoogleReview[] = [];
+  if (business.place_id) {
+    reviews = await getBusinessReviews(business.place_id, 10);
+  }
+
   return {
     props: {
       business,
-      customization
+      customization,
+      reviews
     }
   };
 };

@@ -5,6 +5,22 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export interface GoogleReview {
+  id?: number;
+  place_id: string;
+  reviewer_name: string;
+  review_text: string | null;
+  stars: number;
+  published_at: string | null;
+  published_at_date: string | null;
+  review_id: string;
+  reviewer_url: string | null;
+  review_url: string | null;
+  likes_count: number;
+  reviewer_photo_url: string | null;
+  is_local_guide: boolean;
+}
+
 export interface PlumbingBusiness {
   id?: number;
   name: string;
@@ -106,6 +122,28 @@ export async function getBusinessBySlug(slug: string): Promise<PlumbingBusiness 
   } catch (error) {
     console.error('Error in getBusinessBySlug:', error);
     return null;
+  }
+}
+
+export async function getBusinessReviews(placeId: string, limit: number = 10): Promise<GoogleReview[]> {
+  try {
+    const { data, error } = await supabase
+      .from('google_reviews')
+      .select('*')
+      .eq('place_id', placeId)
+      .eq('stars', 5)  // Only get 5-star reviews
+      .order('published_at_date', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching reviews:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getBusinessReviews:', error);
+    return [];
   }
 }
 
