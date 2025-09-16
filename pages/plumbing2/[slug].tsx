@@ -1,7 +1,7 @@
 
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { getBusinessBySlug, getAllBusinesses, PlumbingBusiness } from '../../lib/csvReader';
+import { getBusinessBySlug, getAllBusinesses, PlumbingBusiness } from '../../lib/supabaseReader';
 
 interface Props {
   business: PlumbingBusiness;
@@ -355,7 +355,7 @@ export default function Plumbing2({ business }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const business = getBusinessBySlug(params?.slug as string);
+  const business = await getBusinessBySlug(params?.slug as string);
 
   if (!business) {
     return {

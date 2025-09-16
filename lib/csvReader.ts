@@ -72,7 +72,7 @@ function parseCSVLine(line: string): string[] {
 
 export function getBusinessBySlug(slug: string): PlumbingBusiness | null {
   try {
-    const csvPath = path.join(process.cwd(), 'filtered_plumbing_data.csv');
+    const csvPath = path.join(process.cwd(), 'data', 'mobile_filtered_plumbing_data.csv');
     const csvData = fs.readFileSync(csvPath, 'utf-8');
     
     const lines = csvData.split('\n');
@@ -102,7 +102,7 @@ export function getBusinessBySlug(slug: string): PlumbingBusiness | null {
 
 export function getAllBusinesses(): PlumbingBusiness[] {
   try {
-    const csvPath = path.join(process.cwd(), 'filtered_plumbing_data.csv');
+    const csvPath = path.join(process.cwd(), 'data', 'mobile_filtered_plumbing_data.csv');
     const csvData = fs.readFileSync(csvPath, 'utf-8');
     
     const lines = csvData.split('\n');
