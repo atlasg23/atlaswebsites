@@ -58,21 +58,17 @@ export default function Plumbing3({ business, customization }: Props) {
       .replace(/{address}/gi, business.full_address);
   };
 
-  // Process text with HTML formatting and robust sanitization
+  // Process text with HTML formatting and sanitization
   const renderFormattedText = (text: string) => {
     const processed = replacePlaceholders(text);
-    
-    // Step 1: Remove all HTML tags first
-    const stripped = processed.replace(/<[^>]*>/g, '');
-    
-    // Step 2: Apply safe formatting only to the stripped text
-    const formatted = stripped
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold**
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') // *italic*
-      .replace(/__(.*?)__/g, '<span style="text-decoration:underline">$1</span>') // __underline__
-      .replace(/\n/g, '<br>'); // newlines to br
-    
-    return formatted;
+    // Sanitize HTML: only allow specific safe tags
+    const sanitized = processed
+      .replace(/<(?!\/?(b|i|u|strong|em|br)\b)[^>]*>/gi, '') // Remove all tags except safe ones
+      .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
+      .replace(/<i>(.*?)<\/i>/g, '<em>$1</em>')
+      .replace(/<u>(.*?)<\/u>/g, '<span style="text-decoration:underline">$1</span>')
+      .replace(/<br\s*\/?>/gi, '<br>'); // Normalize br tags
+    return sanitized;
   };
 
   // Hero data with all customizations
@@ -186,8 +182,7 @@ export default function Plumbing3({ business, customization }: Props) {
         // Validate URL scheme: only allow http(s)
         const url = button.actionValue;
         if (url.startsWith('http://') || url.startsWith('https://')) {
-          const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
-          if (newWindow) newWindow.opener = null; // Defense in depth
+          window.open(url, '_blank');
         } else {
           console.warn('Blocked potentially unsafe URL:', url);
         }
