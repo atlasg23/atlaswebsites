@@ -255,11 +255,6 @@ export default function Plumbing4({ business, customization }: Props) {
 
               {/* Navigation Links */}
               <div className="flex items-center space-x-8">
-                <a href="#services" className={`font-medium hover:opacity-80 transition-opacity ${
-                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
-                }`}>
-                  Services
-                </a>
                 <a href="#about" className={`font-medium hover:opacity-80 transition-opacity ${
                   isScrolled ? 'text-gray-700' : 'text-white text-shadow'
                 }`}>
@@ -455,131 +450,7 @@ export default function Plumbing4({ business, customization }: Props) {
           </div>
         </section>
 
-        {/* Services Section */}
-        <section id="services" className="py-20 px-6 bg-gray-50">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8" style={{ color: primaryColor }}>
-              Services
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
-              {/* Service 1: Emergency Plumbing */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">🚨</div>
-                <h3 className="text-xl font-bold mb-3">Emergency Plumbing</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  24/7 emergency plumbing for urgent issues like burst pipes, severe leaks, and overflowing toilets. We are available day or night to address your critical plumbing needs.
-                </p>
-                <a
-                  href={`tel:${business.phone}`}
-                  className="inline-flex items-center px-6 py-3 rounded-full font-bold text-lg transition-all"
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  Call: {business.phone}
-                </a>
-              </div>
-
-              {/* Service 2: Drain Cleaning */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">
-                  <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200" alt="Drain Cleaning" className="w-24 h-24 object-cover rounded-md"/>
-                </div>
-                <h3 className="text-xl font-bold mb-3">Drain Cleaning</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Clogged drains are no match for us. We use professional equipment to clear blockages in sinks, showers, and main sewer lines, ensuring smooth water flow.
-                </p>
-                <a
-                  href={`tel:${business.phone}`}
-                  className="inline-flex items-center px-6 py-3 rounded-full font-bold text-lg transition-all"
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  Call: {business.phone}
-                </a>
-              </div>
-
-              {/* Service 3: Water Heater Services */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">🔥</div>
-                <h3 className="text-xl font-bold mb-3">Water Heater Services</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  From installation to repair and maintenance, we ensure your water heater runs efficiently. Enjoy reliable hot water with our expert services for all major brands.
-                </p>
-                <a
-                  href={`tel:${business.phone}`}
-                  className="inline-flex items-center px-6 py-3 rounded-full font-bold text-lg transition-all"
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  Call: {business.phone}
-                </a>
-              </div>
-
-              {/* Service 4: Leak Detection */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-xl font-bold mb-3">Leak Detection</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Undetected leaks cause damage. We use advanced technology to pinpoint hidden leaks in pipes, walls, and foundations, preventing costly repairs and water waste.
-                </p>
-                <a
-                  href={`tel:${business.phone}`}
-                  className="inline-flex items-center px-6 py-3 rounded-full font-bold text-lg transition-all"
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  Call: {business.phone}
-                </a>
-              </div>
-
-              {/* Service 5: Fixture Installation */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">🔧</div>
-                <h3 className="text-xl font-bold mb-3">Fixture Installation</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Upgrade your kitchen or bathroom with professional fixture installation. We expertly install faucets, sinks, toilets, and more, ensuring perfect fit and function.
-                </p>
-                <a
-                  href={`tel:${business.phone}`}
-                  className="inline-flex items-center px-6 py-3 rounded-full font-bold text-lg transition-all"
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  Call: {business.phone}
-                </a>
-              </div>
-
-              {/* Service 6: Pipe Repair */}
-              <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">🛠️</div>
-                <h3 className="text-xl font-bold mb-3">Pipe Repair</h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Damaged pipes? We provide reliable pipe repair services, addressing everything from minor leaks to major pipe replacements, ensuring the integrity of your plumbing system.
-                </p>
-                <a
-                  href={`tel:${business.phone}`}
-                  className="inline-flex items-center px-6 py-3 rounded-full font-bold text-lg transition-all"
-                  style={{
-                    backgroundColor: primaryColor,
-                    color: 'white'
-                  }}
-                >
-                  Call: {business.phone}
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+        
 
         <section id="contact" className="py-20 px-6 bg-gray-900 text-white">
           <div className="max-w-6xl mx-auto text-center">
