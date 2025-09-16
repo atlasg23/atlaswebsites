@@ -254,6 +254,11 @@ export default function Plumbing4({ business, customization }: Props) {
                 }`}>
                   About
                 </a>
+                <a href="#services" className={`font-medium hover:opacity-80 transition-opacity ${
+                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
+                }`}>
+                  Services
+                </a>
                 <a href="#contact" className={`font-medium hover:opacity-80 transition-opacity ${
                   isScrolled ? 'text-gray-700' : 'text-white text-shadow'
                 }`}>
@@ -362,15 +367,6 @@ export default function Plumbing4({ business, customization }: Props) {
                   alt="Professional Plumber"
                   className="rounded-lg shadow-lg w-full h-[500px] object-cover"
                 />
-                {/* Trust Indicator - Rating */}
-                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-lg shadow-xl">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold" style={{ color: primaryColor }}>
-                      {business.rating}★
-                    </div>
-                    <div className="text-sm text-gray-600">{business.reviews} Reviews</div>
-                  </div>
-                </div>
               </div>
 
               {/* Content Side */}
@@ -390,37 +386,45 @@ export default function Plumbing4({ business, customization }: Props) {
                 <div className="grid sm:grid-cols-2 gap-6 mt-8">
                   {/* Trust Indicator 1: Licensed & Insured */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl">🛡️</div>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
+                      <div className="w-6 h-6 rounded border-2" style={{ borderColor: primaryColor }}></div>
+                    </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">Licensed & Insured</h3>
                       <p className="text-sm text-gray-600">Fully licensed and insured for your protection</p>
                     </div>
                   </div>
 
-                  {/* Trust Indicator 2: Customer Rating */}
+                  {/* Trust Indicator 2: Fast Turnaround */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl">⭐</div>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
+                      <div className="w-6 h-6 rounded-full border-2" style={{ borderColor: primaryColor }}></div>
+                    </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{business.rating}/5 Star Rating</h3>
-                      <p className="text-sm text-gray-600">{business.reviews} satisfied customers</p>
+                      <h3 className="font-semibold text-gray-900">Fast Turnaround</h3>
+                      <p className="text-sm text-gray-600">Quick response times and efficient service</p>
                     </div>
                   </div>
 
-                  {/* Trust Indicator 3: Expert Technicians */}
+                  {/* Trust Indicator 3: Fair Pricing */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl">🏆</div>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
+                      <div className="w-6 h-6 border-2 rounded" style={{ borderColor: primaryColor }}></div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Fair & Honest Pricing</h3>
+                      <p className="text-sm text-gray-600">Transparent pricing with no hidden fees</p>
+                    </div>
+                  </div>
+
+                  {/* Trust Indicator 4: Expert Technicians */}
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
+                      <div className="w-6 h-6 border-2" style={{ borderColor: primaryColor }}></div>
+                    </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">Expert Technicians</h3>
                       <p className="text-sm text-gray-600">Experienced and certified professionals</p>
-                    </div>
-                  </div>
-
-                  {/* Trust Indicator 4: Quality Guarantee */}
-                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="text-3xl">💯</div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">Quality Guarantee</h3>
-                      <p className="text-sm text-gray-600">100% satisfaction guarantee on all work</p>
                     </div>
                   </div>
                 </div>
@@ -450,10 +454,10 @@ export default function Plumbing4({ business, customization }: Props) {
             {/* Section Header */}
             <div className="text-center mb-16">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
-                {replacePlaceholders(getDeviceValue('services_headline', 'Our Professional Services'))}
+                {replacePlaceholders(getDeviceValue('services_headline', '{business_name} Professional Services'))}
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                {replacePlaceholders(getDeviceValue('services_subheadline', '{business_name} provides expert plumbing solutions for residential and commercial properties in {city} and surrounding areas. A few of {business_name}\'s services include everything from emergency repairs to complete installations.'))}
+                {replacePlaceholders(getDeviceValue('services_subheadline', 'Expert plumbing solutions for residential and commercial properties in {city} and surrounding areas. Our comprehensive services include everything from emergency repairs to complete installations.'))}
               </p>
             </div>
 
@@ -511,7 +515,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service2_title', 'Drain Cleaning')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service2_description', '{business_name} provides professional drain cleaning services for residential and commercial properties in {city} and surrounding areas to clear clogs and keep your plumbing flowing smoothly.'))}
+                    {replacePlaceholders(getDeviceValue('service2_description', 'Professional drain cleaning services for residential and commercial properties in {city} and surrounding areas to clear clogs and keep your plumbing flowing smoothly.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -545,7 +549,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service3_title', 'Water Heater Services')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service3_description', 'Complete water heater installation, repair, and maintenance for both tank and tankless systems. {business_name} serves residential and commercial clients throughout {city}.'))}
+                    {replacePlaceholders(getDeviceValue('service3_description', 'Complete water heater installation, repair, and maintenance for both tank and tankless systems. Serving residential and commercial clients throughout {city}.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -613,7 +617,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service5_title', 'Fixture Installation')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service5_description', 'Professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures. {business_name} handles both residential and commercial fixture installations.'))}
+                    {replacePlaceholders(getDeviceValue('service5_description', 'Professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures. Expert handling of both residential and commercial installations.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
