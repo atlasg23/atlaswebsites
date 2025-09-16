@@ -709,7 +709,7 @@ export default function EditorV2({ business, customization }: Props) {
               <div className="flex-1 flex items-center justify-center text-gray-500">
                 <div className="text-center">
                   <p className="text-lg mb-2">Click any element to edit</p>
-                  <p className="text-sm">Hover over elements to see what's editable</p>
+                  <p className="text-sm">Hover over elements to see what&apos;s editable</p>
                 </div>
               </div>
             )}

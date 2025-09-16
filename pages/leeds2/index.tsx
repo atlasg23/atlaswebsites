@@ -257,6 +257,7 @@ export default function Leeds2({ businesses, totalCount }: Props) {
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Rating</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Reviews</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Verified</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Text</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Templates</th>
                   </tr>
                 </thead>
@@ -340,6 +341,19 @@ export default function Leeds2({ businesses, totalCount }: Props) {
                         }`}>
                           {business.verified === 'True' ? '✓' : '-'}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        {business.phone ? (
+                          <a
+                            href={`sms:${business.phone}?body=Check out our website: https://yoursite.com/plumbing4/${business.slug}`}
+                            className="px-2 py-1 bg-green-100 text-green-700 hover:bg-green-200 rounded text-xs font-medium transition-colors"
+                            title="Text Business"
+                          >
+                            Text
+                          </a>
+                        ) : (
+                          <span className="text-gray-400 text-xs">-</span>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-sm">
                         <div className="flex gap-1 items-center">

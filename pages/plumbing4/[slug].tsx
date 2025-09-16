@@ -974,7 +974,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
 
                       {/* Quote mark */}
                       <div className="absolute top-4 left-4 text-6xl font-serif opacity-10" style={{ color: primaryColor }}>
-                        "
+                        &quot;
                       </div>
 
                       {/* Stars with enhanced animation */}
@@ -998,7 +998,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                       {/* Review Text with better typography */}
                       {review.review_text && (
                         <blockquote className="text-gray-700 mb-6 line-clamp-4 leading-relaxed text-lg font-medium italic relative z-10">
-                          "{review.review_text}"
+                          &quot;{review.review_text}&quot;
                         </blockquote>
                       )}
 
