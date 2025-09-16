@@ -183,8 +183,8 @@ export default function Plumbing4({ business, customization }: Props) {
                     {business.phone}
                   </a>
 
-                  {/* Rating Display - Show only if 4.5+ stars */}
-                  {parseFloat(business.rating) >= 4.5 && (
+                  {/* Rating Display - Show only if 5+ stars AND 10+ reviews */}
+                  {parseFloat(business.rating) >= 5.0 && parseInt(business.reviews) >= 10 && (
                     <div className={`flex items-center justify-center space-x-2 ${
                       isScrolled ? 'text-gray-700' : 'text-white'
                     }`}>
@@ -195,12 +195,9 @@ export default function Plumbing4({ business, customization }: Props) {
                           </span>
                         ))}
                       </div>
-                      {/* Show count only if 10+ reviews */}
-                      {parseInt(business.reviews) >= 10 && (
-                        <span className="text-xs font-medium">
-                          {business.rating} ({business.reviews})
-                        </span>
-                      )}
+                      <span className="text-xs font-medium">
+                        {business.rating} ({business.reviews})
+                      </span>
                     </div>
                   )}
                 </div>
@@ -231,8 +228,8 @@ export default function Plumbing4({ business, customization }: Props) {
                   </p>
                 </div>
 
-                {/* Rating Display - Show only if 4.5+ stars */}
-                {parseFloat(business.rating) >= 4.5 && (
+                {/* Rating Display - Show only if 5+ stars AND 10+ reviews */}
+                {parseFloat(business.rating) >= 5.0 && parseInt(business.reviews) >= 10 && (
                   <div className={`flex items-center space-x-2 ${
                     isScrolled ? 'text-gray-700' : 'text-white'
                   }`}>
@@ -243,12 +240,9 @@ export default function Plumbing4({ business, customization }: Props) {
                         </span>
                       ))}
                     </div>
-                    {/* Show count only if 10+ reviews */}
-                    {parseInt(business.reviews) >= 10 && (
-                      <span className="text-sm font-medium">
-                        {business.rating} ({business.reviews})
-                      </span>
-                    )}
+                    <span className="text-sm font-medium">
+                      {business.rating} ({business.reviews})
+                    </span>
                   </div>
                 )}
               </div>
@@ -866,24 +860,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   </div>
                 </div>
 
-                {/* Trust Indicators */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-                    <div className="text-3xl mb-2">⭐</div>
-                    <div className="text-2xl font-bold" style={{ color: primaryColor }}>
-                      {business.rating}/5
-                    </div>
-                    <div className="text-sm text-gray-600">{business.reviews} Reviews</div>
-                  </div>
-
-                  <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-                    <div className="text-3xl mb-2">🛡️</div>
-                    <div className="text-lg font-bold" style={{ color: primaryColor }}>
-                      Licensed
-                    </div>
-                    <div className="text-sm text-gray-600">& Insured</div>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -1073,8 +1050,8 @@ export default function Plumbing4({ business, customization }: Props) {
                   <span className="text-sm">Licensed & Insured</span>
                 </div>
 
-                {/* Rating */}
-                {parseFloat(business.rating) >= 4.5 && (
+                {/* Rating - Show only if 5+ stars AND 10+ reviews */}
+                {parseFloat(business.rating) >= 5.0 && parseInt(business.reviews) >= 10 && (
                   <div className="flex items-center space-x-2 text-gray-400">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
