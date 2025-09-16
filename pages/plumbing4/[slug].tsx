@@ -120,10 +120,6 @@ export default function Plumbing4({ business, customization }: Props) {
           --secondary-color: ${secondaryColor};
         }
         
-        .hero-gradient {
-          background: linear-gradient(135deg, ${primaryColor}dd 0%, ${secondaryColor}dd 100%);
-        }
-        
         .glass-effect {
           backdrop-filter: blur(10px);
           background: rgba(255, 255, 255, 0.1);
@@ -165,15 +161,8 @@ export default function Plumbing4({ business, customization }: Props) {
         }`}>
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex items-center justify-between">
-              {/* Logo & Business Name */}
-              <div className="flex items-center space-x-4">
-                {business.logo && (
-                  <img 
-                    src={business.logo} 
-                    alt={business.name} 
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                )}
+              {/* Business Name & Info */}
+              <div className="flex items-center space-x-6">
                 <div>
                   <h1 className={`text-xl font-bold ${
                     isScrolled ? 'text-gray-900' : 'text-white text-shadow'
@@ -186,6 +175,27 @@ export default function Plumbing4({ business, customization }: Props) {
                     {business.city}, {business.state}
                   </p>
                 </div>
+                
+                {/* Rating Display - Show only if 4.5+ stars */}
+                {parseFloat(business.rating) >= 4.5 && (
+                  <div className={`flex items-center space-x-2 ${
+                    isScrolled ? 'text-gray-700' : 'text-white'
+                  }`}>
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`text-yellow-400 ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    {/* Show count only if 10+ reviews */}
+                    {parseInt(business.reviews) >= 10 && (
+                      <span className="text-sm font-medium">
+                        {business.rating} ({business.reviews})
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Navigation Links - Desktop */}
@@ -212,10 +222,10 @@ export default function Plumbing4({ business, customization }: Props) {
                 {/* Phone Button */}
                 <a
                   href={`tel:${business.phone}`}
-                  className="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold transition-all hover-lift flex items-center space-x-2"
+                  className="px-6 py-3 rounded-full font-semibold transition-all hover-lift flex items-center space-x-2"
                   style={{ 
-                    background: isScrolled ? primaryColor : 'white',
-                    color: isScrolled ? 'white' : primaryColor
+                    backgroundColor: primaryColor,
+                    color: 'white'
                   }}
                 >
                   <span>📞</span>
@@ -243,18 +253,11 @@ export default function Plumbing4({ business, customization }: Props) {
             backgroundAttachment: 'fixed'
           }}
         >
-          {/* Overlay with Gradient */}
+          {/* Simple Dark Overlay */}
           <div 
-            className="absolute inset-0 hero-gradient"
+            className="absolute inset-0 bg-black"
             style={{ opacity: heroData.overlayOpacity / 100 }}
           />
-
-          {/* Floating Elements - Background */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-20 left-10 w-20 h-20 bg-white bg-opacity-10 rounded-full animate-float" style={{ animationDelay: '0s' }}></div>
-            <div className="absolute top-40 right-20 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
-            <div className="absolute bottom-40 left-20 w-12 h-12 bg-white bg-opacity-10 rounded-full animate-float" style={{ animationDelay: '4s' }}></div>
-          </div>
 
           {/* Content */}
           <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center">
@@ -288,26 +291,25 @@ export default function Plumbing4({ business, customization }: Props) {
                 {/* Primary CTA */}
                 <a
                   href={`tel:${business.phone}`}
-                  className="group relative overflow-hidden px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift"
+                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift"
                   style={{
-                    backgroundColor: heroData.button1BgColor,
-                    color: heroData.button1Color
+                    backgroundColor: primaryColor,
+                    color: 'white'
                   }}
                 >
-                  <div className="absolute inset-0 bg-white bg-opacity-20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-                  <div className="relative flex items-center space-x-3">
+                  <div className="flex items-center space-x-3">
                     <span>📞</span>
-                    <span>{heroData.button1Text}</span>
+                    <span>{business.phone}</span>
                   </div>
                 </a>
 
                 {/* Secondary CTA */}
                 <button
-                  className="group px-8 py-4 rounded-full font-bold text-lg border-2 border-white transition-all hover-lift glass-effect"
+                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift"
                   style={{
-                    backgroundColor: heroData.button2BgColor,
-                    color: heroData.button2Color,
-                    borderColor: heroData.button2Color
+                    backgroundColor: 'transparent',
+                    color: 'white',
+                    borderColor: secondaryColor
                   }}
                 >
                   <div className="flex items-center space-x-3">
