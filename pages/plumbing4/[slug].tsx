@@ -463,7 +463,7 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getDeviceValue('service1_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop')}
+                    src={getDeviceValue('service1_image', 'https://media.istockphoto.com/id/2164998055/photo/excess-water-on-the-bathroom-floor-flooding-in-the-bathroom.jpg?s=612x612&w=0&k=20&c=jGsDXpJAohowK-Q6V4dGlcCcMzkLgh5sE0mzTrpfZJo=')}
                     alt="Emergency Plumbing"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -534,7 +534,7 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getDeviceValue('service3_image', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop')}
+                    src={getDeviceValue('service3_image', 'https://media.istockphoto.com/id/2212376667/photo/man-fixing-water-heater-using-wrench.jpg?s=612x612&w=0&k=20&c=Fcp6DxVDkXFlvQAlv227EHr-49rdy2e1RQPvYerxUV4=')}
                     alt="Water Heater Services"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -568,7 +568,7 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getDeviceValue('service4_image', 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&h=300&fit=crop')}
+                    src={getDeviceValue('service4_image', 'https://media.istockphoto.com/id/1052635334/photo/laying-and-installation-of-a-sewer-pipe.jpg?s=612x612&w=0&k=20&c=RCRzKnqrz897kWVFsJdbp6HXQ-Oqsyl0bQcFl4rdryE=')}
                     alt="Pipe Repair"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -602,7 +602,7 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getDeviceValue('service5_image', 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=400&h=300&fit=crop')}
+                    src={getDeviceValue('service5_image', 'https://media.istockphoto.com/id/1290764152/photo/installing-the-head-of-the-built-in-shower-faucet.jpg?s=612x612&w=0&k=20&c=FuouoZ16EqeOZpo-jKOBayZRVilrnUotSI_rVEmFKM8=')}
                     alt="Fixture Installation"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -636,7 +636,7 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getDeviceValue('service6_image', 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop')}
+                    src={getDeviceValue('service6_image', 'https://media.istockphoto.com/id/2167162369/photo/repairing-old-district-heating-pipeline-in-concrete-trench.jpg?s=612x612&w=0&k=20&c=2ylN8aXN9kHVSycfFpCv_8jgesHbavHkDkVAl21lG-I=')}
                     alt="Sewer Line Services"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
