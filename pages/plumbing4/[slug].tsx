@@ -1,3 +1,4 @@
+
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -12,6 +13,8 @@ interface Props {
 export default function Plumbing4({ business, customization }: Props) {
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showServicesDropdown, setShowServicesDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     // Check if mobile device
@@ -30,7 +33,7 @@ export default function Plumbing4({ business, customization }: Props) {
 
     return () => {
       window.removeEventListener('resize', checkMobile);
-      window.addEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -74,6 +77,16 @@ export default function Plumbing4({ business, customization }: Props) {
   // Primary colors
   const primaryColor = business.primary_color || '#1E40AF';
   const secondaryColor = business.secondary_color || '#3B82F6';
+
+  // Services data
+  const services = [
+    { name: 'Emergency Plumbing', href: '#services' },
+    { name: 'Drain Cleaning', href: '#services' },
+    { name: 'Water Heater Services', href: '#services' },
+    { name: 'Pipe Repair & Replacement', href: '#services' },
+    { name: 'Fixture Installation', href: '#services' },
+    { name: 'Sewer Line Services', href: '#services' }
+  ];
 
   // Hero data with all customizations
   const heroData = {
@@ -151,6 +164,29 @@ export default function Plumbing4({ business, customization }: Props) {
           backdrop-filter: blur(10px);
           background: rgba(255, 255, 255, 0.95);
         }
+
+        .dropdown-menu {
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+
+        .mobile-menu {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease;
+        }
+
+        .mobile-menu.show {
+          max-height: 500px;
+        }
       `}</style>
 
       <div className="min-h-screen bg-white">
@@ -161,53 +197,47 @@ export default function Plumbing4({ business, customization }: Props) {
           <div className="max-w-7xl mx-auto px-4">
             {/* Mobile Layout */}
             <div className="md:hidden">
-              <div className="flex items-center justify-center w-full relative">
-                {/* Centered Content */}
-                <div className="flex flex-col items-center space-y-2">
-                  {/* Business Name */}
-                  <h1 className={`text-lg font-bold text-center ${
+              <div className="flex items-center justify-between">
+                {/* Business Name */}
+                <div>
+                  <h1 className={`text-lg font-bold ${
                     isScrolled ? 'text-gray-900' : 'text-white text-shadow'
                   }`}>
                     {business.name}
                   </h1>
-
-                  {/* Phone Number */}
-                  <a
-                    href={`tel:${business.phone}`}
-                    className="px-3 py-1 rounded-full font-semibold text-sm transition-all"
-                    style={{ 
-                      backgroundColor: primaryColor,
-                      color: 'white'
-                    }}
-                  >
-                    {business.phone}
-                  </a>
-
-                  {/* Rating Display - Show only if 5+ stars AND 10+ reviews */}
-                  {parseFloat(business.rating) >= 5.0 && parseInt(business.reviews) >= 10 && (
-                    <div className={`flex items-center justify-center space-x-2 ${
-                      isScrolled ? 'text-gray-700' : 'text-white'
-                    }`}>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className={`text-yellow-400 text-sm ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <span className="text-xs font-medium">
-                        {business.rating} ({business.reviews})
-                      </span>
-                    </div>
-                  )}
+                  <p className={`text-sm ${
+                    isScrolled ? 'text-gray-600' : 'text-gray-200'
+                  }`}>
+                    {business.city}, {business.state}
+                  </p>
                 </div>
 
-                {/* Menu Button - Positioned absolutely to top-right */}
-                <button className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2">
-                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
-                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
-                  <div className={`w-6 h-0.5 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                {/* Mobile Menu Button */}
+                <button 
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-2 rounded-lg"
+                  style={{ backgroundColor: showMobileMenu ? primaryColor : 'transparent' }}
+                >
+                  <div className={`w-6 h-0.5 mb-1 transition-all ${showMobileMenu ? 'bg-white' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
+                  <div className={`w-6 h-0.5 mb-1 transition-all ${showMobileMenu ? 'bg-white' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
+                  <div className={`w-6 h-0.5 transition-all ${showMobileMenu ? 'bg-white' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
                 </button>
+              </div>
+
+              {/* Mobile Menu */}
+              <div className={`mobile-menu ${showMobileMenu ? 'show' : ''} bg-white shadow-lg rounded-lg mt-4 p-4`}>
+                <div className="space-y-4">
+                  <a href="#about" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">About</a>
+                  <a href="#services" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Services</a>
+                  <a href="#contact" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="block w-full py-3 px-4 rounded-full font-bold text-center text-white"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    Call {business.phone}
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -224,7 +254,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   <p className={`text-sm ${
                     isScrolled ? 'text-gray-600' : 'text-gray-200'
                   }`}>
-                    {business.city}, {business.state}
+                    Professional Plumbing Services • {business.city}, {business.state}
                   </p>
                 </div>
 
@@ -235,9 +265,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   }`}>
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} className={`text-yellow-400 ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
-                          ★
-                        </span>
+                        <span key={i} className="text-yellow-400">★</span>
                       ))}
                     </div>
                     <span className="text-sm font-medium">
@@ -250,17 +278,42 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Navigation Links */}
               <div className="flex items-center space-x-8">
                 <a href="#about" className={`font-medium hover:opacity-80 transition-opacity ${
-                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
+                  isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white text-shadow hover:text-blue-200'
                 }`}>
                   About
                 </a>
-                <a href="#services" className={`font-medium hover:opacity-80 transition-opacity ${
-                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
-                }`}>
-                  Services
-                </a>
+
+                {/* Services Dropdown */}
+                <div 
+                  className="relative"
+                  onMouseEnter={() => setShowServicesDropdown(true)}
+                  onMouseLeave={() => setShowServicesDropdown(false)}
+                >
+                  <button className={`font-medium hover:opacity-80 transition-opacity flex items-center space-x-1 ${
+                    isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white text-shadow hover:text-blue-200'
+                  }`}>
+                    <span>Services</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div className={`dropdown-menu ${showServicesDropdown ? 'show' : ''} absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2`}>
+                    {services.map((service, index) => (
+                      <a
+                        key={index}
+                        href={service.href}
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors font-medium"
+                      >
+                        {service.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
                 <a href="#contact" className={`font-medium hover:opacity-80 transition-opacity ${
-                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
+                  isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white text-shadow hover:text-blue-200'
                 }`}>
                   Contact
                 </a>
@@ -268,13 +321,15 @@ export default function Plumbing4({ business, customization }: Props) {
                 {/* Phone Button */}
                 <a
                   href={`tel:${business.phone}`}
-                  className="px-6 py-3 rounded-full font-semibold transition-all hover-lift flex items-center space-x-2"
+                  className="px-6 py-3 rounded-full font-semibold transition-all hover-lift flex items-center space-x-2 shadow-lg"
                   style={{ 
                     backgroundColor: primaryColor,
                     color: 'white'
                   }}
                 >
-                  <span>📞</span>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                  </svg>
                   <span>{business.phone}</span>
                 </a>
               </div>
@@ -322,21 +377,24 @@ export default function Plumbing4({ business, customization }: Props) {
                 {/* Primary CTA */}
                 <a
                   href={`tel:${business.phone}`}
-                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift w-full sm:w-auto"
+                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift w-full sm:w-auto shadow-xl"
                   style={{
                     backgroundColor: primaryColor,
                     color: 'white'
                   }}
                 >
                   <div className="flex items-center justify-center space-x-3">
-                    <span>📞</span>
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
                     <span>Call {business.phone}</span>
                   </div>
                 </a>
 
                 {/* Secondary CTA */}
                 <button
-                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift w-full sm:w-auto"
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift w-full sm:w-auto shadow-xl"
                   style={{
                     backgroundColor: 'transparent',
                     color: 'white',
@@ -344,15 +402,15 @@ export default function Plumbing4({ business, customization }: Props) {
                   }}
                 >
                   <div className="flex items-center justify-center space-x-3">
-                    <span>💬</span>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.471L3 21l2.471-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
+                    </svg>
                     <span>{heroData.button2Text}</span>
                   </div>
                 </button>
               </div>
             </div>
           </div>
-
-
         </section>
 
         {/* About Section */}
@@ -387,7 +445,9 @@ export default function Plumbing4({ business, customization }: Props) {
                   {/* Trust Indicator 1: Licensed & Insured */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
-                      <div className="w-6 h-6 rounded border-2" style={{ borderColor: primaryColor }}></div>
+                      <svg className="w-6 h-6" style={{ color: primaryColor }} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">Licensed & Insured</h3>
@@ -398,7 +458,9 @@ export default function Plumbing4({ business, customization }: Props) {
                   {/* Trust Indicator 2: Fast Turnaround */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
-                      <div className="w-6 h-6 rounded-full border-2" style={{ borderColor: primaryColor }}></div>
+                      <svg className="w-6 h-6" style={{ color: primaryColor }} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                      </svg>
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">Fast Turnaround</h3>
@@ -409,7 +471,10 @@ export default function Plumbing4({ business, customization }: Props) {
                   {/* Trust Indicator 3: Fair Pricing */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
-                      <div className="w-6 h-6 border-2 rounded" style={{ borderColor: primaryColor }}></div>
+                      <svg className="w-6 h-6" style={{ color: primaryColor }} fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
+                      </svg>
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">Fair & Honest Pricing</h3>
@@ -417,14 +482,16 @@ export default function Plumbing4({ business, customization }: Props) {
                     </div>
                   </div>
 
-                  {/* Trust Indicator 4: Expert Technicians */}
+                  {/* Trust Indicator 4: Licensed Only */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${primaryColor}15` }}>
-                      <div className="w-6 h-6 border-2" style={{ borderColor: primaryColor }}></div>
+                      <svg className="w-6 h-6" style={{ color: primaryColor }} fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Expert Technicians</h3>
-                      <p className="text-sm text-gray-600">Experienced and certified professionals</p>
+                      <h3 className="font-semibold text-gray-900">Quality Guarantee</h3>
+                      <p className="text-sm text-gray-600">Satisfaction guaranteed on all work</p>
                     </div>
                   </div>
                 </div>
@@ -433,13 +500,15 @@ export default function Plumbing4({ business, customization }: Props) {
                 <div className="pt-6">
                   <a
                     href={`tel:${business.phone}`}
-                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift space-x-3"
+                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift space-x-3 shadow-lg"
                     style={{
                       backgroundColor: primaryColor,
                       color: 'white'
                     }}
                   >
-                    <span>📞</span>
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
                     <span>Call Now: {business.phone}</span>
                   </a>
                 </div>
@@ -682,46 +751,58 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href={`tel:${business.phone}`}
-                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift"
+                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift shadow-lg"
                   style={{
                     backgroundColor: primaryColor,
                     color: 'white'
                   }}
                 >
-                  📞 Call {business.phone}
+                  <div className="flex items-center justify-center space-x-3">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    <span>Call {business.phone}</span>
+                  </div>
                 </a>
                 <button
-                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift"
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift shadow-lg bg-white"
                   style={{
                     borderColor: primaryColor,
-                    color: primaryColor,
-                    backgroundColor: 'transparent'
+                    color: primaryColor
                   }}
                 >
-                  💬 Get Free Quote
+                  <div className="flex items-center justify-center space-x-3">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.471L3 21l2.471-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
+                    </svg>
+                    <span>Get Free Quote</span>
+                  </div>
                 </button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Contact Section */}
+        {/* Contact Section with Form */}
         <section id="contact" className="py-20 px-6 relative overflow-hidden">
           {/* Background with gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             {/* Section Header */}
-            <div className="text-center mb-20">
-              <div className="inline-block p-2 rounded-full mb-6" style={{ backgroundColor: `${primaryColor}15` }}>
+            <div className="text-center mb-16">
+              <div className="inline-block p-3 rounded-full mb-6" style={{ backgroundColor: `${primaryColor}15` }}>
                 <div 
                   className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl"
                   style={{ backgroundColor: primaryColor }}
                 >
-                  📞
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                  </svg>
                 </div>
               </div>
-              <h2 className="text-5xl lg:text-6xl font-bold mb-6" style={{ color: primaryColor }}>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: primaryColor }}>
                 Get in Touch
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
@@ -729,62 +810,152 @@ export default function Plumbing4({ business, customization }: Props) {
               </p>
             </div>
 
-            {/* Main Contact Grid */}
-            <div className="grid lg:grid-cols-3 gap-8 mb-16">
-              {/* Phone Contact - Primary CTA */}
-              <div className="lg:col-span-1">
-                <div 
-                  className="bg-white p-8 rounded-2xl shadow-xl border-l-4 hover-lift h-full"
-                  style={{ borderLeftColor: primaryColor }}
-                >
-                  <div className="text-center">
-                    <div 
-                      className="w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6"
-                      style={{ backgroundColor: primaryColor }}
-                    >
-                      📞
+            {/* Contact Grid */}
+            <div className="grid lg:grid-cols-2 gap-12 mb-16">
+              {/* Contact Form */}
+              <div className="bg-white p-8 rounded-2xl shadow-xl">
+                <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
+                  Get Your Free Quote
+                </h3>
+                <form className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                      <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-all"
+                        style={{ focusRingColor: primaryColor }}
+                        placeholder="John"
+                      />
                     </div>
-                    <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
-                      Call Now
-                    </h3>
-                    <a 
-                      href={`tel:${business.phone}`}
-                      className="text-3xl font-bold hover:underline mb-4 block transition-all"
-                      style={{ color: primaryColor }}
-                    >
-                      {business.phone}
-                    </a>
-                    <p className="text-gray-600 mb-6">
-                      24/7 Emergency Service Available
-                    </p>
-                    <a
-                      href={`tel:${business.phone}`}
-                      className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift text-white w-full"
-                      style={{ backgroundColor: primaryColor }}
-                    >
-                      Call Now
-                    </a>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                      <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-all"
+                        placeholder="Doe"
+                      />
+                    </div>
                   </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-all"
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-all"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Service Needed</label>
+                    <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-all">
+                      <option>Select a service...</option>
+                      <option>Emergency Plumbing</option>
+                      <option>Drain Cleaning</option>
+                      <option>Water Heater Services</option>
+                      <option>Pipe Repair & Replacement</option>
+                      <option>Fixture Installation</option>
+                      <option>Sewer Line Services</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                    <textarea
+                      rows={4}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-all resize-none"
+                      placeholder="Please describe your plumbing issue or project..."
+                    ></textarea>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift shadow-lg text-white"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    Send Message & Get Free Quote
+                  </button>
+                </form>
+
+                <div className="mt-6 p-4 rounded-lg bg-gray-50">
+                  <p className="text-sm text-gray-600 text-center">
+                    <svg className="w-5 h-5 inline-block mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                    Your information is secure and will only be used to contact you about your plumbing needs.
+                  </p>
                 </div>
               </div>
 
-              {/* Email & Service Area */}
-              <div className="lg:col-span-1 space-y-8">
-                {/* Email Card */}
+              {/* Contact Information */}
+              <div className="space-y-8">
+                {/* Phone Contact */}
+                <div className="bg-white p-8 rounded-2xl shadow-lg hover-lift">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div 
+                      className="w-16 h-16 rounded-full flex items-center justify-center text-white"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold" style={{ color: primaryColor }}>Call Now</h4>
+                      <p className="text-gray-600">24/7 Emergency Service</p>
+                    </div>
+                  </div>
+                  
+                  <a 
+                    href={`tel:${business.phone}`}
+                    className="text-2xl font-bold hover:underline mb-4 block transition-all"
+                    style={{ color: primaryColor }}
+                  >
+                    {business.phone}
+                  </a>
+                  
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="inline-block w-full px-6 py-3 rounded-full font-bold text-center transition-all hover-lift text-white"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    Call Now
+                  </a>
+                </div>
+
+                {/* Email */}
                 {business.email_1 && (
                   <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
                     <div className="flex items-center space-x-4">
                       <div 
-                        className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl"
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white"
                         style={{ backgroundColor: secondaryColor }}
                       >
-                        ✉️
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
                       </div>
                       <div className="flex-1">
                         <h4 className="font-bold text-lg text-gray-900 mb-1">Email Us</h4>
                         <a 
                           href={`mailto:${business.email_1}`}
-                          className="text-lg hover:underline break-all"
+                          className="hover:underline break-all"
                           style={{ color: primaryColor }}
                         >
                           {business.email_1}
@@ -794,14 +965,16 @@ export default function Plumbing4({ business, customization }: Props) {
                   </div>
                 )}
 
-                {/* Service Area Card */}
+                {/* Service Area */}
                 <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
                   <div className="flex items-center space-x-4">
                     <div 
-                      className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl"
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white"
                       style={{ backgroundColor: secondaryColor }}
                     >
-                      📍
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-lg text-gray-900 mb-1">Service Area</h4>
@@ -812,54 +985,36 @@ export default function Plumbing4({ business, customization }: Props) {
                   </div>
                 </div>
 
-                {/* Trust Indicator */}
-                <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
-                  <div className="flex items-center space-x-4">
-                    <div 
-                      className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl"
-                      style={{ backgroundColor: '#10B981' }}
-                    >
-                      🛡️
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-lg text-gray-900 mb-1">Licensed & Insured</h4>
-                      <p className="text-gray-600">
-                        Fully licensed professionals with comprehensive insurance
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Working Hours */}
-              <div className="lg:col-span-1">
-                {business.working_hours ? (
-                  <div className="bg-white p-8 rounded-2xl shadow-lg hover-lift h-full">
-                    <div className="text-center mb-6">
+                {/* Working Hours */}
+                {business.working_hours && (
+                  <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
+                    <div className="flex items-center space-x-4 mb-4">
                       <div 
-                        className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4"
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white"
                         style={{ backgroundColor: secondaryColor }}
                       >
-                        🕒
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
                       </div>
-                      <h3 className="text-2xl font-bold" style={{ color: primaryColor }}>
-                        Business Hours
-                      </h3>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-lg text-gray-900">Business Hours</h4>
+                      </div>
                     </div>
                     
-                    <div className="space-y-3">
+                    <div className="ml-16 space-y-2">
                       {(() => {
                         try {
                           const hours = JSON.parse(business.working_hours);
                           return Object.entries(hours).map(([day, time]) => (
-                            <div key={day} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
+                            <div key={day} className="flex justify-between items-center py-1 border-b border-gray-100 last:border-b-0">
                               <span className="font-medium text-gray-900">{day}</span>
                               <span className="text-gray-600">{time}</span>
                             </div>
                           ));
                         } catch {
                           return business.working_hours.split('\n').map((line, index) => (
-                            <div key={index} className="text-center py-1 text-gray-700">
+                            <div key={index} className="text-gray-700 py-1">
                               {line.trim()}
                             </div>
                           ));
@@ -867,26 +1022,9 @@ export default function Plumbing4({ business, customization }: Props) {
                       })()}
                     </div>
                     
-                    <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: `${primaryColor}08` }}>
-                      <p className="text-center font-semibold" style={{ color: primaryColor }}>
+                    <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: `${primaryColor}08` }}>
+                      <p className="text-center font-semibold text-sm" style={{ color: primaryColor }}>
                         🚨 Emergency Services Available 24/7
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-white p-8 rounded-2xl shadow-lg hover-lift h-full flex items-center justify-center">
-                    <div className="text-center">
-                      <div 
-                        className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4"
-                        style={{ backgroundColor: primaryColor }}
-                      >
-                        🚨
-                      </div>
-                      <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
-                        24/7 Service
-                      </h3>
-                      <p className="text-gray-600">
-                        Emergency plumbing services available around the clock
                       </p>
                     </div>
                   </div>
@@ -944,33 +1082,6 @@ export default function Plumbing4({ business, customization }: Props) {
                 </div>
               </div>
             </div>
-
-            {/* Bottom CTA */}
-            <div className="mt-16 text-center">
-              <div className="bg-white p-12 rounded-2xl shadow-xl" style={{ background: `linear-gradient(135deg, ${primaryColor}08 0%, white 100%)` }}>
-                <h3 className="text-4xl font-bold mb-6" style={{ color: primaryColor }}>
-                  Ready to Get Started?
-                </h3>
-                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                  Don't let plumbing problems disrupt your day. Contact {business.name} now for fast, professional service.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                  <a
-                    href={`tel:${business.phone}`}
-                    className="flex-1 px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift text-white"
-                    style={{ backgroundColor: primaryColor }}
-                  >
-                    📞 Call {business.phone}
-                  </a>
-                  <button
-                    className="flex-1 px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift bg-white"
-                    style={{ borderColor: primaryColor, color: primaryColor }}
-                  >
-                    💬 Get Free Quote
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -994,7 +1105,9 @@ export default function Plumbing4({ business, customization }: Props) {
                     href={`tel:${business.phone}`}
                     className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors"
                   >
-                    <span>📞</span>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
                     <span>{business.phone}</span>
                   </a>
                   
@@ -1003,46 +1116,21 @@ export default function Plumbing4({ business, customization }: Props) {
                       href={`mailto:${business.email_1}`}
                       className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors"
                     >
-                      <span>✉️</span>
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                      </svg>
                       <span>{business.email_1}</span>
                     </a>
                   )}
                   
                   <div className="flex items-center space-x-3 text-gray-400">
-                    <span>📍</span>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    </svg>
                     <span>{business.city}, {business.state}</span>
                   </div>
                 </div>
-
-                {/* Social Links - Only show if available */}
-                {(business.facebook || business.instagram) && (
-                  <div className="flex space-x-4">
-                    {business.facebook && (
-                      <a
-                        href={business.facebook.startsWith('http') ? business.facebook : `https://facebook.com/${business.facebook}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-blue-400 transition-colors"
-                      >
-                        <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition-colors">
-                          👥
-                        </div>
-                      </a>
-                    )}
-                    {business.instagram && (
-                      <a
-                        href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-pink-400 transition-colors"
-                      >
-                        <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-colors">
-                          📸
-                        </div>
-                      </a>
-                    )}
-                  </div>
-                )}
               </div>
 
               {/* Services */}
@@ -1051,36 +1139,13 @@ export default function Plumbing4({ business, customization }: Props) {
                   Our Services
                 </h4>
                 <ul className="space-y-2">
-                  <li>
-                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                      Emergency Plumbing
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                      Drain Cleaning
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                      Water Heater Service
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                      Pipe Repair
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                      Fixture Installation
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                      Sewer Line Services
-                    </a>
-                  </li>
+                  {services.map((service, index) => (
+                    <li key={index}>
+                      <a href={service.href} className="text-gray-400 hover:text-white transition-colors">
+                        {service.name}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -1112,7 +1177,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   </li>
                 </ul>
 
-                {/* Business Hours */}
+                {/* Business Hours Summary */}
                 {business.working_hours && (
                   <div className="mt-6">
                     <h5 className="font-medium mb-2">Business Hours</h5>
@@ -1154,7 +1219,9 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 mb-4 sm:mb-0">
                 {/* License Badge */}
                 <div className="flex items-center space-x-2 text-gray-400">
-                  <span>🛡️</span>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
                   <span className="text-sm">Licensed & Insured</span>
                 </div>
 
@@ -1163,9 +1230,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   <div className="flex items-center space-x-2 text-gray-400">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} className={`text-yellow-400 text-sm ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
-                          ★
-                        </span>
+                        <span key={i} className="text-yellow-400 text-sm">★</span>
                       ))}
                     </div>
                     <span className="text-sm">{business.rating}/5 ({business.reviews} reviews)</span>
@@ -1174,22 +1239,12 @@ export default function Plumbing4({ business, customization }: Props) {
 
                 {/* Emergency Service */}
                 <div className="flex items-center space-x-2 text-gray-400">
-                  <span>🚨</span>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
                   <span className="text-sm">24/7 Emergency Service</span>
                 </div>
               </div>
-
-              {/* Emergency Call Button */}
-              <a
-                href={`tel:${business.phone}`}
-                className="px-6 py-3 rounded-full font-bold transition-all hover-lift"
-                style={{
-                  backgroundColor: primaryColor,
-                  color: 'white'
-                }}
-              >
-                📞 Emergency Call
-              </a>
             </div>
 
             {/* Copyright */}
