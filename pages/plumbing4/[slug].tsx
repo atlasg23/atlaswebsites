@@ -365,11 +365,13 @@ export default function Plumbing4({ business, customization }: Props) {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Image Side */}
               <div className="relative">
+                {/* About Image: Get from customizaiton or use default */}
                 <img
-                  src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=500&fit=crop"
+                  src={getDeviceValue('about_image', 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=500&fit=crop')}
                   alt="Professional Plumber"
                   className="rounded-lg shadow-lg w-full h-[500px] object-cover"
                 />
+                {/* Trust Indicator - Rating */}
                 <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-lg shadow-xl">
                   <div className="text-center">
                     <div className="text-3xl font-bold" style={{ color: primaryColor }}>
@@ -383,18 +385,19 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Content Side */}
               <div className="space-y-6">
                 <div>
+                  {/* About Headline */}
                   <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
-                    About {business.name}
+                    {replacePlaceholders(getDeviceValue('about_headline', `About {business_name}`))}
                   </h2>
+                  {/* About Subheadline/Description */}
                   <p className="text-xl text-gray-600 leading-relaxed">
-                    Your trusted plumbing professionals serving {business.city} and surrounding areas. 
-                    We combine years of experience with modern techniques to deliver reliable, 
-                    high-quality plumbing solutions for homes and businesses.
+                    {replacePlaceholders(getDeviceValue('about_subheadline', `Your trusted plumbing professionals serving {city} and surrounding areas. We combine years of experience with modern techniques to deliver reliable, high-quality plumbing solutions for homes and businesses.`))}
                   </p>
                 </div>
 
                 {/* Trust Indicators Grid */}
                 <div className="grid sm:grid-cols-2 gap-6 mt-8">
+                  {/* Trust Indicator 1: Licensed & Insured */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="text-3xl">🛡️</div>
                     <div>
@@ -403,6 +406,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     </div>
                   </div>
 
+                  {/* Trust Indicator 2: Customer Rating */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="text-3xl">⭐</div>
                     <div>
@@ -411,6 +415,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     </div>
                   </div>
 
+                  {/* Trust Indicator 3: Expert Technicians */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="text-3xl">🏆</div>
                     <div>
@@ -419,6 +424,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     </div>
                   </div>
 
+                  {/* Trust Indicator 4: Quality Guarantee */}
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                     <div className="text-3xl">💯</div>
                     <div>
@@ -454,15 +460,6 @@ export default function Plumbing4({ business, customization }: Props) {
               Our Services
             </h2>
             <p className="text-gray-600">Services section coming soon...</p>
-          </div>
-        </section>
-
-        <section id="about" className="py-20 px-6">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4" style={{ color: primaryColor }}>
-              About {business.name}
-            </h2>
-            <p className="text-gray-600">About section coming soon...</p>
           </div>
         </section>
 
