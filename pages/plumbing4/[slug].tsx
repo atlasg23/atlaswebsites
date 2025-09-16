@@ -40,7 +40,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
     };
   }, []);
 
-  // Auto-advance reviews every 3 seconds
+  // Auto-advance reviews every 8 seconds
   useEffect(() => {
     if (reviews.length <= 1) return;
 
@@ -49,7 +49,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
         const maxIndex = Math.min(reviews.length, 5) - 1;
         return prevIndex === maxIndex ? 0 : prevIndex + 1;
       });
-    }, 3000);
+    }, 8000);
 
     return () => clearInterval(interval);
   }, [reviews.length]);
@@ -1440,18 +1440,6 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                   </svg>
                   <span className="text-sm">Licensed & Insured</span>
                 </div>
-
-                {/* Rating - Show only if 5+ stars AND 10+ reviews */}
-                {parseFloat(business.rating) >= 5.0 && parseInt(business.reviews) >= 10 && (
-                  <div className="flex items-center space-x-2 text-gray-400">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <span key={i} className="text-yellow-400 text-sm">★</span>
-                      ))}
-                    </div>
-                    <span className="text-sm">{business.rating}/5 ({business.reviews} reviews)</span>
-                  </div>
-                )}
 
                 {/* Emergency Service */}
                 <div className="flex items-center space-x-2 text-gray-400">
