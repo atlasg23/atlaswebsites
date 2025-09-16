@@ -208,6 +208,14 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
           max-height: 500px;
         }
 
+        @media (max-width: 768px) {
+          .hero-bg-mobile {
+            background-attachment: scroll !important;
+            background-size: cover !important;
+            background-position: center !important;
+          }
+        }
+
         .reviews-container {
           scroll-behavior: smooth;
           -webkit-overflow-scrolling: touch;
@@ -264,18 +272,20 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
               </div>
 
               {/* Mobile Menu */}
-              <div className={`mobile-menu ${showMobileMenu ? 'show' : ''} bg-white shadow-lg rounded-lg mt-4 p-4`}>
-                <div className="space-y-4">
-                  <a href="#about" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">About</a>
-                  <a href="#services" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Services</a>
-                  <a href="#contact" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Contact</a>
-                  <a
-                    href={`tel:${business.phone}`}
-                    className="block w-full py-3 px-4 rounded-full font-bold text-center text-white"
-                    style={{ backgroundColor: primaryColor }}
-                  >
-                    Call {business.phone}
-                  </a>
+              <div className={`mobile-menu ${showMobileMenu ? 'show' : ''}`}>
+                <div className="bg-white shadow-lg rounded-lg mt-4 p-4 border-t-0">
+                  <div className="space-y-4">
+                    <a href="#about" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">About</a>
+                    <a href="#services" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Services</a>
+                    <a href="#contact" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                    <a
+                      href={`tel:${business.phone}`}
+                      className="block w-full py-3 px-4 rounded-full font-bold text-center text-white"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      Call {business.phone}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -378,12 +388,12 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
 
         {/* Hero Section */}
         <section
-          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+          className={`relative min-h-screen flex items-center justify-center overflow-hidden ${isMobile ? 'hero-bg-mobile' : ''}`}
           style={{
             backgroundImage: `url('${heroData.image}')`,
             backgroundSize: heroData.imageSize,
             backgroundPosition: heroData.imagePosition,
-            backgroundAttachment: 'fixed'
+            backgroundAttachment: isMobile ? 'scroll' : 'fixed'
           }}
         >
           {/* Simple Dark Overlay */}
@@ -393,11 +403,11 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
           />
 
           {/* Content */}
-          <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-32 text-center">
             <div className="max-w-4xl mx-auto">
               {/* Main Headline */}
               <h1 
-                className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-shadow leading-tight"
+                className="text-3xl md:text-6xl lg:text-7xl font-bold mb-6 md:mb-8 text-shadow leading-tight"
                 style={{ color: heroData.headlineColor }}
               >
                 {replacePlaceholders(heroData.headline)}
@@ -405,25 +415,25 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
 
               {/* Description */}
               <p 
-                className="text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed"
+                className="text-base md:text-lg lg:text-xl mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed px-2"
                 style={{ color: heroData.descriptionColor }}
               >
                 {replacePlaceholders(heroData.description)}
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-4">
                 {/* Primary CTA */}
                 <a
                   href={`tel:${business.phone}`}
-                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift w-full sm:w-auto shadow-xl"
+                  className="px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-base md:text-lg transition-all hover-lift w-full sm:w-auto shadow-xl"
                   style={{
                     backgroundColor: primaryColor,
                     color: 'white'
                   }}
                 >
-                  <div className="flex items-center justify-center space-x-3">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="flex items-center justify-center space-x-2 md:space-x-3">
+                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                     </svg>
                     <span>Call {business.phone}</span>
@@ -433,15 +443,15 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                 {/* Secondary CTA */}
                 <button
                   onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift w-full sm:w-auto shadow-xl"
+                  className="px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-base md:text-lg border-2 transition-all hover-lift w-full sm:w-auto shadow-xl"
                   style={{
                     backgroundColor: 'transparent',
                     color: 'white',
                     borderColor: secondaryColor
                   }}
                 >
-                  <div className="flex items-center justify-center space-x-3">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center justify-center space-x-2 md:space-x-3">
+                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.471L3 21l2.471-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
                     </svg>
                     <span>{heroData.button2Text}</span>
