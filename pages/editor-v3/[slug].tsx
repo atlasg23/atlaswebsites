@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { getBusinessBySlug, PlumbingBusiness } from '../../lib/supabaseReader';
-import { getTemplateCustomization, saveTemplateCustomization, publishTemplate } from '../../lib/templateCustomizations';
+import { getTemplateCustomization, saveTemplateCustomization, saveTemplateVersion, publishTemplate } from '../../lib/templateCustomizations';
 import { RichTextEditor } from '../../components/RichTextEditor';
 import { VersionHistory } from '../../components/VersionHistory';
 import { debounce } from 'lodash';
@@ -219,117 +219,124 @@ export default function EditorV3({ business, customization }: Props) {
   // Save changes with device-specific handling
   const saveChangesWithDevice = useCallback(
     async (data: any, applyTo: ApplyTo) => {
-      setIsSaving(true);
-      const savePromises = [];
-      const historyEdits = [];
+      console.log('=== EDITOR SAVE START ===');
+      console.log('Business slug:', business.slug);
+      console.log('Apply to:', applyTo);
+      console.log('Data to save:', data);
 
-      // Store previous data for history tracking
-      if (!previousData) {
-        setPreviousData(heroData);
-      }
+      setIsSaving(true);
+
+      // Build the complete customization object
+      const customImages: any = {};
+      const customText: any = {};
+      const customColors: any = {};
+      const customStyles: any = {};
+      const customButtons: any = {};
 
       // Determine suffixes based on applyTo
       const suffixes = applyTo === 'both' ? ['', '_mobile', '_desktop'] :
                       applyTo === 'mobile' ? ['_mobile'] :
                       ['_desktop'];
 
-      // Save to appropriate keys based on device selection
+      // Build data for each suffix
       for (const suffix of suffixes) {
         // Images
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_images', `hero_image${suffix}`, data.image));
+        customImages[`hero_image${suffix}`] = data.image;
 
         // Text content
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_headline${suffix}`, data.headline));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_subheadline${suffix}`, data.subheadline));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_button1Text${suffix}`, data.button1.text));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_button2Text${suffix}`, data.button2.text));
+        customText[`hero_headline${suffix}`] = data.headline;
+        customText[`hero_subheadline${suffix}`] = data.subheadline;
+        customText[`hero_button1Text${suffix}`] = data.button1.text;
+        customText[`hero_button2Text${suffix}`] = data.button2.text;
 
         // Colors
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_headlineColor${suffix}`, data.headlineColor));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_subheadlineColor${suffix}`, data.subheadlineColor));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button1BgColor${suffix}`, data.button1.bgColor));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button1Color${suffix}`, data.button1.textColor));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button2BgColor${suffix}`, data.button2.bgColor));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button2Color${suffix}`, data.button2.textColor));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_overlayOpacity${suffix}`, data.overlayOpacity.toString()));
+        customColors[`hero_headlineColor${suffix}`] = data.headlineColor;
+        customColors[`hero_subheadlineColor${suffix}`] = data.subheadlineColor;
+        customColors[`hero_button1BgColor${suffix}`] = data.button1.bgColor;
+        customColors[`hero_button1Color${suffix}`] = data.button1.textColor;
+        customColors[`hero_button2BgColor${suffix}`] = data.button2.bgColor;
+        customColors[`hero_button2Color${suffix}`] = data.button2.textColor;
+        customColors[`hero_overlayOpacity${suffix}`] = data.overlayOpacity.toString();
 
         // Styles
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_sectionHeight${suffix}`, data.sectionHeight));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_sectionAnimation${suffix}`, data.sectionAnimation));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_imagePosition${suffix}`, data.imagePosition));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_imageSize${suffix}`, data.imageSize));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_imageFilter${suffix}`, data.imageFilter));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineSize${suffix}`, data.headlineSize.toString()));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineFont${suffix}`, data.headlineFont));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineWeight${suffix}`, data.headlineWeight));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineAnimation${suffix}`, data.headlineAnimation));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineSize${suffix}`, data.subheadlineSize.toString()));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineFont${suffix}`, data.subheadlineFont));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineWeight${suffix}`, data.subheadlineWeight));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineAnimation${suffix}`, data.subheadlineAnimation));
+        customStyles[`hero_sectionHeight${suffix}`] = data.sectionHeight;
+        customStyles[`hero_sectionAnimation${suffix}`] = data.sectionAnimation;
+        customStyles[`hero_imagePosition${suffix}`] = data.imagePosition;
+        customStyles[`hero_imageSize${suffix}`] = data.imageSize;
+        customStyles[`hero_imageFilter${suffix}`] = data.imageFilter;
+        customStyles[`hero_headlineSize${suffix}`] = data.headlineSize.toString();
+        customStyles[`hero_headlineFont${suffix}`] = data.headlineFont;
+        customStyles[`hero_headlineWeight${suffix}`] = data.headlineWeight;
+        customStyles[`hero_headlineAnimation${suffix}`] = data.headlineAnimation;
+        customStyles[`hero_subheadlineSize${suffix}`] = data.subheadlineSize.toString();
+        customStyles[`hero_subheadlineFont${suffix}`] = data.subheadlineFont;
+        customStyles[`hero_subheadlineWeight${suffix}`] = data.subheadlineWeight;
+        customStyles[`hero_subheadlineAnimation${suffix}`] = data.subheadlineAnimation;
 
         // Buttons
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button1Enabled${suffix}`, data.button1.enabled.toString()));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button1Size${suffix}`, data.button1.size));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button1Animation${suffix}`, data.button1.animation));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button2Enabled${suffix}`, data.button2.enabled.toString()));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button2Size${suffix}`, data.button2.size));
-        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button2Animation${suffix}`, data.button2.animation));
+        customButtons[`hero_button1Enabled${suffix}`] = data.button1.enabled.toString();
+        customButtons[`hero_button1Size${suffix}`] = data.button1.size;
+        customButtons[`hero_button1Animation${suffix}`] = data.button1.animation;
+        customButtons[`hero_button1_action${suffix}`] = data.button1.action;
+        customButtons[`hero_button1_actionValue${suffix}`] = data.button1.actionValue;
+        customButtons[`hero_button2Enabled${suffix}`] = data.button2.enabled.toString();
+        customButtons[`hero_button2Size${suffix}`] = data.button2.size;
+        customButtons[`hero_button2Animation${suffix}`] = data.button2.animation;
+        customButtons[`hero_button2_action${suffix}`] = data.button2.action;
+        customButtons[`hero_button2_actionValue${suffix}`] = data.button2.actionValue;
       }
 
-      await Promise.all(savePromises);
+      console.log('Built customization objects:');
+      console.log('Images:', customImages);
+      console.log('Text:', customText);
+      console.log('Colors:', customColors);
+      console.log('Styles:', customStyles);
+      console.log('Buttons:', customButtons);
 
-      // Track history - compare what changed
-      if (previousData) {
-        const changes: any[] = [];
+      // Get existing customization to merge with
+      console.log('Fetching existing customization...');
+      const existing = await getTemplateCustomization(business.slug);
+      console.log('Existing data:', existing);
 
-        // Check each field for changes
-        Object.keys(data).forEach(key => {
-          if (JSON.stringify(data[key]) !== JSON.stringify(previousData[key])) {
-            if (typeof data[key] === 'object') {
-              // Handle nested objects like buttons
-              Object.keys(data[key]).forEach(subKey => {
-                if (data[key][subKey] !== previousData[key]?.[subKey]) {
-                  changes.push({
-                    field: key.includes('button') ? 'custom_buttons' : 'custom_styles',
-                    key: `hero_${key}${subKey.charAt(0).toUpperCase() + subKey.slice(1)}`,
-                    oldValue: previousData[key]?.[subKey],
-                    newValue: data[key][subKey],
-                    deviceType: applyTo
-                  });
-                }
-              });
-            } else {
-              const fieldType = key.includes('Color') ? 'custom_colors' :
-                              key.includes('headline') || key.includes('subheadline') ? 'custom_text' :
-                              key === 'image' ? 'custom_images' : 'custom_styles';
+      // Merge with existing data
+      const versionData = {
+        custom_images: { ...(existing?.custom_images || {}), ...customImages },
+        custom_text: { ...(existing?.custom_text || {}), ...customText },
+        custom_colors: { ...(existing?.custom_colors || {}), ...customColors },
+        custom_styles: { ...(existing?.custom_styles || {}), ...customStyles },
+        custom_buttons: { ...(existing?.custom_buttons || {}), ...customButtons },
+      };
 
-              changes.push({
-                field: fieldType,
-                key: `hero_${key}`,
-                oldValue: previousData[key],
-                newValue: data[key],
-                deviceType: applyTo
-              });
-            }
-          }
-        });
+      console.log('Merged version data:', versionData);
 
-        // Save history if there are changes
-        if (changes.length > 0) {
-          fetch('/api/edit-history', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug: business.slug, edits: changes })
-          }).catch(console.error);
+      // Save as new version
+      console.log('Calling saveTemplateVersion...');
+      const success = await saveTemplateVersion(
+        business.slug,
+        versionData,
+        `Saved changes (${applyTo === 'both' ? 'all devices' : applyTo + ' only'})`
+      );
+
+      console.log('Save result:', success);
+
+      if (success) {
+        setIsSaving(false);
+        setSaveStatus('saved');
+        setHasUnsavedChanges(false);
+        setTimeout(() => setSaveStatus('idle'), 2000);
+
+        // Reload customization to get new version
+        const newCustomization = await getTemplateCustomization(business.slug);
+        if (newCustomization) {
+          // Update the current state with new version data if needed
+          console.log('✅ SAVE SUCCESS! New version:', newCustomization.version);
         }
+      } else {
+        console.error('❌ SAVE FAILED');
+        setIsSaving(false);
+        setSaveStatus('idle');
+        // Alert is already shown in saveTemplateVersion
       }
-
-      setPreviousData(data);
-      setIsSaving(false);
-      setSaveStatus('saved');
-      setHasUnsavedChanges(false);
-      setTimeout(() => setSaveStatus('idle'), 2000);
     },
     [business.slug]
   );
@@ -390,6 +397,9 @@ export default function EditorV3({ business, customization }: Props) {
       await Promise.all(savePromises);
 
       setIsSaving(false);
+      setSaveStatus('saved');
+      setHasUnsavedChanges(false);
+      setTimeout(() => setSaveStatus('idle'), 2000);
     }, 1000),
     [business.slug]
   );
@@ -453,7 +463,6 @@ export default function EditorV3({ business, customization }: Props) {
     <>
       <Head>
         <title>{`Pro Editor - ${business.name}`}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&family=Raleway:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700;900&family=Oswald:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700;900&family=Work+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; }
