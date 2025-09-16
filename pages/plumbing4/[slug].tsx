@@ -1,4 +1,3 @@
-
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -28,7 +27,7 @@ export default function Plumbing4({ business, customization }: Props) {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     window.addEventListener('scroll', handleScroll);
-    
+
     return () => {
       window.removeEventListener('resize', checkMobile);
       window.removeEventListener('scroll', handleScroll);
@@ -119,35 +118,35 @@ export default function Plumbing4({ business, customization }: Props) {
           --primary-color: ${primaryColor};
           --secondary-color: ${secondaryColor};
         }
-        
+
         .glass-effect {
           backdrop-filter: blur(10px);
           background: rgba(255, 255, 255, 0.1);
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .hover-lift {
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .hover-lift:hover {
           transform: translateY(-5px);
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
-        
+
         .text-shadow {
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        
+
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
-        
+
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
         }
-        
+
         .nav-blur {
           backdrop-filter: blur(10px);
           background: rgba(255, 255, 255, 0.95);
@@ -170,7 +169,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   }`}>
                     {business.name}
                   </h1>
-                  
+
                   {/* Phone Number */}
                   <a
                     href={`tel:${business.phone}`}
@@ -182,7 +181,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   >
                     {business.phone}
                   </a>
-                  
+
                   {/* Rating Display - Show only if 4.5+ stars */}
                   {parseFloat(business.rating) >= 4.5 && (
                     <div className={`flex items-center space-x-2 ${
@@ -229,7 +228,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {business.city}, {business.state}
                   </p>
                 </div>
-                
+
                 {/* Rating Display - Show only if 4.5+ stars */}
                 {parseFloat(business.rating) >= 4.5 && (
                   <div className={`flex items-center space-x-2 ${
@@ -357,7 +356,7 @@ export default function Plumbing4({ business, customization }: Props) {
             </div>
           </div>
 
-          
+
         </section>
 
         {/* Placeholder for future sections */}
