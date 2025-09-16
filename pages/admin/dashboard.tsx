@@ -104,7 +104,7 @@ export default function AdminDashboard() {
   const saveLeadStatus = async () => {
     if (!selectedLead) return;
 
-    const adminUser = localStorage.getItem('adminUser');
+    const currentAdminUser = adminUser;
 
     try {
       if (modalAction === 'archive') {
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
           city: selectedLead.city,
           reason: archiveReason,
           notes: notes,
-          archived_by: adminUser
+          archived_by: currentAdminUser
         });
 
         // Remove from lead_status if exists
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
         const statusUpdate: any = {
           lead_slug: selectedLead.slug,
           call_notes: notes,
-          updated_by: adminUser,
+          updated_by: currentAdminUser,
           last_contact_date: new Date().toISOString()
         };
 
@@ -186,6 +186,11 @@ export default function AdminDashboard() {
   };
 
   const filteredLeads = getFilteredLeads();
+  const [adminUser, setAdminUser] = useState<string | null>(null);
+
+  useEffect(() => {
+    setAdminUser(localStorage.getItem('adminUser'));
+  }, []);
 
   return (
     <>
@@ -201,7 +206,7 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center py-4">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Lead Management Dashboard</h1>
-                <p className="text-sm text-gray-600">Welcome, {localStorage.getItem('adminUser')}</p>
+                <p className="text-sm text-gray-600">Welcome, {adminUser}</p>
               </div>
               <button
                 onClick={handleLogout}

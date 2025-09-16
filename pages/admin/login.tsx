@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -114,9 +115,9 @@ export default function AdminLogin() {
           </div>
 
           <div className="text-center mt-4">
-            <a href="/" className="text-gray-400 hover:text-white transition-colors text-sm">
+            <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm">
               ← Back to main site
-            </a>
+            </Link>
           </div>
         </div>
       </div>
