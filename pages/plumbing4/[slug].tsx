@@ -782,7 +782,6 @@ export default function Plumbing4({ business, customization }: Props) {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900">Service Area</h4>
-                      <p className="text-gray-600">{business.full_address}</p>
                       <p className="text-sm text-gray-500">Serving {business.city} and surrounding areas</p>
                     </div>
                   </div>
@@ -802,72 +801,32 @@ export default function Plumbing4({ business, customization }: Props) {
                         🕒
                       </div>
                       <div>
-                        <div className="text-lg text-gray-900">
-                          {business.working_hours.split('\n').map((line, index) => (
-                            <div key={index} className="mb-1">{line.trim()}</div>
-                          ))}
+                        <div className="text-lg text-gray-900 space-y-1">
+                          {(() => {
+                            try {
+                              // Try to parse as JSON first
+                              const hours = JSON.parse(business.working_hours);
+                              return Object.entries(hours).map(([day, time]) => (
+                                <div key={day} className="flex justify-between">
+                                  <span className="font-medium">{day}:</span>
+                                  <span className="ml-4">{time}</span>
+                                </div>
+                              ));
+                            } catch {
+                              // Fall back to line-by-line display
+                              return business.working_hours.split('\n').map((line, index) => (
+                                <div key={index}>{line.trim()}</div>
+                              ));
+                            }
+                          })()}
                         </div>
-                        <p className="text-sm text-red-600 font-semibold mt-3">
+                        <p className="text-sm text-red-600 font-semibold mt-4">
                           Emergency services available 24/7
                         </p>
                       </div>
                     </div>
                   </div>
                 )}
-
-                {/* Social Media Card - Only show if we have social media */}
-                {(business.instagram || business.facebook) && (
-                  <div className="bg-white p-8 rounded-xl shadow-lg">
-                    <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
-                      Follow Us
-                    </h3>
-                    <div className="flex space-x-4">
-                      {business.facebook && (
-                        <a 
-                          href={business.facebook.startsWith('http') ? business.facebook : `https://facebook.com/${business.facebook}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-3 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                          <span className="text-xl">👥</span>
-                          <span className="font-semibold">Facebook</span>
-                        </a>
-                      )}
-                      {business.instagram && (
-                        <a 
-                          href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-3 bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors"
-                        >
-                          <span className="text-xl">📸</span>
-                          <span className="font-semibold">Instagram</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Quick CTA */}
-                <div className="bg-white p-8 rounded-xl shadow-lg text-center border-2" style={{ borderColor: primaryColor }}>
-                  <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
-                    Need Service Now?
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    Don't wait - plumbing problems get worse over time. Call us now for fast, professional service.
-                  </p>
-                  <a
-                    href={`tel:${business.phone}`}
-                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift space-x-3"
-                    style={{
-                      backgroundColor: primaryColor,
-                      color: 'white'
-                    }}
-                  >
-                    <span>📞</span>
-                    <span>Call {business.phone}</span>
-                  </a>
-                </div>
               </div>
 
               {/* Map Side */}
