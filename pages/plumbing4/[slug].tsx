@@ -79,7 +79,7 @@ export default function Plumbing4({ business, customization }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Image settings
-    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&q=80'),
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200'),
     imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
     imageSize: getDeviceValue('hero_imageSize', 'cover'),
     overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
