@@ -108,7 +108,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Image settings
-    image: getDeviceValue('hero_image', 'https://assets.cdn.filesafe.space/A9rd4HdLD0sTvRuuQFZl/media/651501775cf2e93f16638cf9.jpeg'),
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200'),
     imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
     imageSize: getDeviceValue('hero_imageSize', 'cover'),
     overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
@@ -303,7 +303,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                   <p className={`text-sm ${
                     isScrolled ? 'text-gray-600' : 'text-gray-200'
                   }`}>
-                    {business.phone} • Professional Plumbing Services • {business.city}, {business.state}
+                    {business.phone}
                   </p>
                 </div>
 
@@ -470,9 +470,9 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
               <div className="relative">
                 {/* About Image: Get from customizaiton or use default */}
                 <img
-                  src={getDeviceValue('about_image', 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=500&fit=crop')}
+                  src={getDeviceValue('about_image', 'https://assets.cdn.filesafe.space/A9rd4HdLD0sTvRuuQFZl/media/651501775cf2e93f16638cf9.jpeg')}
                   alt="Professional Plumber"
-                  className="rounded-lg shadow-lg w-full h-[500px] object-cover"
+                  className="rounded-lg shadow-lg w-full h-[300px] md:h-[400px] lg:h-[450px] object-cover object-top"
                 />
               </div>
 
