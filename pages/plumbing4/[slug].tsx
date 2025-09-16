@@ -359,6 +359,94 @@ export default function Plumbing4({ business, customization }: Props) {
 
         </section>
 
+        {/* About Section */}
+        <section id="about" className="py-20 px-6 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Image Side */}
+              <div className="relative">
+                <img
+                  src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=500&fit=crop"
+                  alt="Professional Plumber"
+                  className="rounded-lg shadow-lg w-full h-[500px] object-cover"
+                />
+                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-lg shadow-xl">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold" style={{ color: primaryColor }}>
+                      {business.rating}★
+                    </div>
+                    <div className="text-sm text-gray-600">{business.reviews} Reviews</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Side */}
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
+                    About {business.name}
+                  </h2>
+                  <p className="text-xl text-gray-600 leading-relaxed">
+                    Your trusted plumbing professionals serving {business.city} and surrounding areas. 
+                    We combine years of experience with modern techniques to deliver reliable, 
+                    high-quality plumbing solutions for homes and businesses.
+                  </p>
+                </div>
+
+                {/* Trust Indicators Grid */}
+                <div className="grid sm:grid-cols-2 gap-6 mt-8">
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl">🛡️</div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Licensed & Insured</h3>
+                      <p className="text-sm text-gray-600">Fully licensed and insured for your protection</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl">⭐</div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{business.rating}/5 Star Rating</h3>
+                      <p className="text-sm text-gray-600">{business.reviews} satisfied customers</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl">🏆</div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Expert Technicians</h3>
+                      <p className="text-sm text-gray-600">Experienced and certified professionals</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="text-3xl">💯</div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Quality Guarantee</h3>
+                      <p className="text-sm text-gray-600">100% satisfaction guarantee on all work</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <div className="pt-6">
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift space-x-3"
+                    style={{
+                      backgroundColor: primaryColor,
+                      color: 'white'
+                    }}
+                  >
+                    <span>📞</span>
+                    <span>Call Now: {business.phone}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Placeholder for future sections */}
         <section id="services" className="py-20 px-6 bg-gray-50">
           <div className="max-w-6xl mx-auto text-center">
