@@ -78,7 +78,7 @@ export default function Plumbing4({ business, customization }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Image settings
-    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200'),
+    image: getDeviceValue('hero_image', 'https://media.istockphoto.com/id/874169110/photo/plumber-installs-a-new-siphon.jpg?s=612x612&w=0&k=20&c=NfTPoT63YEiEXqvxhmRKNfWJz-PtG2Gy3wo4xXg18CQ='),
     imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
     imageSize: getDeviceValue('hero_imageSize', 'cover'),
     overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
@@ -483,7 +483,9 @@ export default function Plumbing4({ business, customization }: Props) {
 
               {/* Service 2: Drain Cleaning */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
-                <div className="text-4xl mb-4">💧</div>
+                <div className="text-4xl mb-4">
+                  <img src="https://media.istockphoto.com/id/874169110/photo/plumber-installs-a-new-siphon.jpg?s=612x612&w=0&k=20&c=NfTPoT63YEiEXqvxhmRKNfWJz-PtG2Gy3wo4xXg18CQ=" alt="Drain Cleaning Icon" className="w-12 h-12 object-contain"/>
+                </div>
                 <h3 className="text-xl font-bold mb-3">{business.name} - Drain Cleaning</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
                   Clogged drains are no match for {business.name}. We use professional equipment to clear blockages in sinks, showers, and main sewer lines, ensuring smooth water flow throughout your property.
