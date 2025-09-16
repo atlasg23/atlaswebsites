@@ -453,7 +453,7 @@ export default function Plumbing4({ business, customization }: Props) {
                 {replacePlaceholders(getDeviceValue('services_headline', 'Our Professional Services'))}
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                {replacePlaceholders(getDeviceValue('services_subheadline', 'Expert plumbing solutions for your home and business. We handle everything from emergency repairs to complete installations.'))}
+                {replacePlaceholders(getDeviceValue('services_subheadline', '{business_name} provides expert plumbing solutions for residential and commercial properties in {city} and surrounding areas. A few of {business_name}\'s services include everything from emergency repairs to complete installations.'))}
               </p>
             </div>
 
@@ -477,7 +477,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service1_title', 'Emergency Plumbing')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {getDeviceValue('service1_description', 'Available 24/7 for urgent plumbing emergencies. Fast response times and expert solutions when you need them most.')}
+                    {replacePlaceholders(getDeviceValue('service1_description', 'Available 24/7 for urgent plumbing emergencies in {city} and surrounding areas. Fast response times and expert solutions when you need them most.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -500,7 +500,7 @@ export default function Plumbing4({ business, customization }: Props) {
               <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={getDeviceValue('service2_image', 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop')}
+                    src={getDeviceValue('service2_image', 'https://media.istockphoto.com/id/2188182926/photo/plumber-unclogging-blocked-shower-drain-with-hydro-jetting-at-home-bathroom-sewer-cleaning.jpg?s=612x612&w=0&k=20&c=x_cUZ9f-68akj7Vn8VIFAUVyhAoku0wt0uARXIUWeKk=')}
                     alt="Drain Cleaning"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -511,7 +511,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service2_title', 'Drain Cleaning')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {getDeviceValue('service2_description', 'Professional drain cleaning services to clear clogs and keep your plumbing flowing smoothly.')}
+                    {replacePlaceholders(getDeviceValue('service2_description', '{business_name} provides professional drain cleaning services for residential and commercial properties in {city} and surrounding areas to clear clogs and keep your plumbing flowing smoothly.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -545,7 +545,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service3_title', 'Water Heater Services')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {getDeviceValue('service3_description', 'Complete water heater installation, repair, and maintenance for both tank and tankless systems.')}
+                    {replacePlaceholders(getDeviceValue('service3_description', 'Complete water heater installation, repair, and maintenance for both tank and tankless systems. {business_name} serves residential and commercial clients throughout {city}.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -613,7 +613,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     {getDeviceValue('service5_title', 'Fixture Installation')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {getDeviceValue('service5_description', 'Professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures.')}
+                    {replacePlaceholders(getDeviceValue('service5_description', 'Professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures. {business_name} handles both residential and commercial fixture installations.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
