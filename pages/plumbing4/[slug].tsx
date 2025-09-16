@@ -702,165 +702,269 @@ export default function Plumbing4({ business, customization }: Props) {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 px-6 bg-gray-50">
-          <div className="max-w-7xl mx-auto">
+        <section id="contact" className="py-20 px-6 relative overflow-hidden">
+          {/* Background with gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
+          
+          <div className="max-w-7xl mx-auto relative z-10">
             {/* Section Header */}
-            <div className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
-                Contact Us Today
+            <div className="text-center mb-20">
+              <div className="inline-block p-2 rounded-full mb-6" style={{ backgroundColor: `${primaryColor}15` }}>
+                <div 
+                  className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  📞
+                </div>
+              </div>
+              <h2 className="text-5xl lg:text-6xl font-bold mb-6" style={{ color: primaryColor }}>
+                Get in Touch
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                Ready to solve your plumbing problems? Get in touch with {business.name} for fast, reliable service.
+                Ready to solve your plumbing problems? Contact {business.name} for professional, reliable service you can trust.
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Contact Information Side */}
-              <div className="space-y-8">
-                {/* Main Contact Card */}
-                <div className="bg-white p-8 rounded-xl shadow-lg">
-                  <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
-                    Get in Touch
-                  </h3>
-                  
-                  {/* Phone */}
-                  <div className="flex items-center space-x-4 mb-6">
+            {/* Main Contact Grid */}
+            <div className="grid lg:grid-cols-3 gap-8 mb-16">
+              {/* Phone Contact - Primary CTA */}
+              <div className="lg:col-span-1">
+                <div 
+                  className="bg-white p-8 rounded-2xl shadow-xl border-l-4 hover-lift h-full"
+                  style={{ borderLeftColor: primaryColor }}
+                >
+                  <div className="text-center">
                     <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
+                      className="w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6"
                       style={{ backgroundColor: primaryColor }}
                     >
                       📞
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Call Us</h4>
-                      <a 
-                        href={`tel:${business.phone}`}
-                        className="text-xl font-bold hover:underline"
-                        style={{ color: primaryColor }}
-                      >
-                        {business.phone}
-                      </a>
-                      <p className="text-sm text-gray-600">Available 24/7 for emergencies</p>
-                    </div>
+                    <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
+                      Call Now
+                    </h3>
+                    <a 
+                      href={`tel:${business.phone}`}
+                      className="text-3xl font-bold hover:underline mb-4 block transition-all"
+                      style={{ color: primaryColor }}
+                    >
+                      {business.phone}
+                    </a>
+                    <p className="text-gray-600 mb-6">
+                      24/7 Emergency Service Available
+                    </p>
+                    <a
+                      href={`tel:${business.phone}`}
+                      className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift text-white w-full"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      Call Now
+                    </a>
                   </div>
+                </div>
+              </div>
 
-                  {/* Email - Only show if business has email */}
-                  {business.email_1 && (
-                    <div className="flex items-center space-x-4 mb-6">
+              {/* Email & Service Area */}
+              <div className="lg:col-span-1 space-y-8">
+                {/* Email Card */}
+                {business.email_1 && (
+                  <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
+                    <div className="flex items-center space-x-4">
                       <div 
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
-                        style={{ backgroundColor: primaryColor }}
+                        className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl"
+                        style={{ backgroundColor: secondaryColor }}
                       >
                         ✉️
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Email Us</h4>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-lg text-gray-900 mb-1">Email Us</h4>
                         <a 
                           href={`mailto:${business.email_1}`}
-                          className="text-lg hover:underline"
+                          className="text-lg hover:underline break-all"
                           style={{ color: primaryColor }}
                         >
                           {business.email_1}
                         </a>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Address */}
-                  <div className="flex items-start space-x-4 mb-6">
+                {/* Service Area Card */}
+                <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
+                  <div className="flex items-center space-x-4">
                     <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
-                      style={{ backgroundColor: primaryColor }}
+                      className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl"
+                      style={{ backgroundColor: secondaryColor }}
                     >
                       📍
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Service Area</h4>
-                      <p className="text-sm text-gray-500">Serving {business.city} and surrounding areas</p>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-lg text-gray-900 mb-1">Service Area</h4>
+                      <p className="text-gray-600">
+                        {business.city}, {business.state} and surrounding areas
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Working Hours Card */}
-                {business.working_hours && (
-                  <div className="bg-white p-8 rounded-xl shadow-lg">
-                    <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
-                      Business Hours
-                    </h3>
-                    <div className="flex items-start space-x-4">
+                {/* Trust Indicator */}
+                <div className="bg-white p-6 rounded-2xl shadow-lg hover-lift">
+                  <div className="flex items-center space-x-4">
+                    <div 
+                      className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl"
+                      style={{ backgroundColor: '#10B981' }}
+                    >
+                      🛡️
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-lg text-gray-900 mb-1">Licensed & Insured</h4>
+                      <p className="text-gray-600">
+                        Fully licensed professionals with comprehensive insurance
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Working Hours */}
+              <div className="lg:col-span-1">
+                {business.working_hours ? (
+                  <div className="bg-white p-8 rounded-2xl shadow-lg hover-lift h-full">
+                    <div className="text-center mb-6">
                       <div 
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
-                        style={{ backgroundColor: primaryColor }}
+                        className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4"
+                        style={{ backgroundColor: secondaryColor }}
                       >
                         🕒
                       </div>
-                      <div>
-                        <div className="text-lg text-gray-900 space-y-1">
-                          {(() => {
-                            try {
-                              // Try to parse as JSON first
-                              const hours = JSON.parse(business.working_hours);
-                              return Object.entries(hours).map(([day, time]) => (
-                                <div key={day} className="flex justify-between">
-                                  <span className="font-medium">{day}:</span>
-                                  <span className="ml-4">{time}</span>
-                                </div>
-                              ));
-                            } catch {
-                              // Fall back to line-by-line display
-                              return business.working_hours.split('\n').map((line, index) => (
-                                <div key={index}>{line.trim()}</div>
-                              ));
-                            }
-                          })()}
-                        </div>
-                        <p className="text-sm text-red-600 font-semibold mt-4">
-                          Emergency services available 24/7
-                        </p>
+                      <h3 className="text-2xl font-bold" style={{ color: primaryColor }}>
+                        Business Hours
+                      </h3>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {(() => {
+                        try {
+                          const hours = JSON.parse(business.working_hours);
+                          return Object.entries(hours).map(([day, time]) => (
+                            <div key={day} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
+                              <span className="font-medium text-gray-900">{day}</span>
+                              <span className="text-gray-600">{time}</span>
+                            </div>
+                          ));
+                        } catch {
+                          return business.working_hours.split('\n').map((line, index) => (
+                            <div key={index} className="text-center py-1 text-gray-700">
+                              {line.trim()}
+                            </div>
+                          ));
+                        }
+                      })()}
+                    </div>
+                    
+                    <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: `${primaryColor}08` }}>
+                      <p className="text-center font-semibold" style={{ color: primaryColor }}>
+                        🚨 Emergency Services Available 24/7
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-white p-8 rounded-2xl shadow-lg hover-lift h-full flex items-center justify-center">
+                    <div className="text-center">
+                      <div 
+                        className="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4"
+                        style={{ backgroundColor: primaryColor }}
+                      >
+                        🚨
                       </div>
+                      <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
+                        24/7 Service
+                      </h3>
+                      <p className="text-gray-600">
+                        Emergency plumbing services available around the clock
+                      </p>
                     </div>
                   </div>
                 )}
               </div>
+            </div>
 
-              {/* Map Side */}
-              <div className="space-y-6">
-                {/* Service Area Map */}
-                <div className="bg-white p-8 rounded-xl shadow-lg h-[600px]">
-                  <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
-                    Our Service Area
-                  </h3>
-                  
-                  {/* Google Maps Embed - Using business coordinates or address */}
-                  <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      scrolling="no"
-                      marginHeight={0}
-                      marginWidth={0}
-                      src={business.latitude && business.longitude ? 
-                        `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${business.latitude},${business.longitude}&t=&z=13&ie=UTF8&iwloc=&output=embed` :
-                        `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodeURIComponent(business.city + ', ' + business.state)}&t=&z=12&ie=UTF8&iwloc=&output=embed`
-                      }
-                      title={`${business.name} Service Area Map`}
-                      className="rounded-lg"
-                    />
-                  </div>
-                  
-                  {/* Service Area Info */}
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <h4 className="font-semibold mb-2" style={{ color: primaryColor }}>
-                      Areas We Serve:
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      {business.city}, {business.state} and surrounding communities within a 25-mile radius
-                    </p>
-                  </div>
+            {/* Map Section */}
+            <div className="bg-white p-8 rounded-2xl shadow-xl">
+              <div className="mb-8 text-center">
+                <h3 className="text-3xl font-bold mb-4" style={{ color: primaryColor }}>
+                  Our Service Area
+                </h3>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  We proudly serve {business.city}, {business.state} and surrounding communities. 
+                  See our coverage area below.
+                </p>
+              </div>
+              
+              {/* Google Maps Container */}
+              <div className="relative h-96 rounded-xl overflow-hidden shadow-lg">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  scrolling="no"
+                  marginHeight={0}
+                  marginWidth={0}
+                  src={business.latitude && business.longitude ? 
+                    `https://maps.google.com/maps?width=100%25&height=400&hl=en&q=${business.latitude},${business.longitude}&t=&z=13&ie=UTF8&iwloc=&output=embed` :
+                    `https://maps.google.com/maps?width=100%25&height=400&hl=en&q=${encodeURIComponent(business.city + ', ' + business.state)}&t=&z=12&ie=UTF8&iwloc=&output=embed`
+                  }
+                  title={`${business.name} Service Area Map`}
+                  className="w-full h-full"
+                />
+              </div>
+              
+              {/* Service Area Info */}
+              <div className="mt-6 grid md:grid-cols-2 gap-6">
+                <div className="p-4 rounded-lg" style={{ backgroundColor: `${primaryColor}08` }}>
+                  <h4 className="font-bold mb-2" style={{ color: primaryColor }}>
+                    📍 Primary Service Area
+                  </h4>
+                  <p className="text-gray-700 text-sm">
+                    {business.city}, {business.state} and immediate surrounding areas
+                  </p>
                 </div>
+                <div className="p-4 rounded-lg bg-gray-50">
+                  <h4 className="font-bold mb-2 text-gray-900">
+                    🌟 Extended Coverage
+                  </h4>
+                  <p className="text-gray-700 text-sm">
+                    We also serve communities within a 25-mile radius for scheduled services
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                
+            {/* Bottom CTA */}
+            <div className="mt-16 text-center">
+              <div className="bg-white p-12 rounded-2xl shadow-xl" style={{ background: `linear-gradient(135deg, ${primaryColor}08 0%, white 100%)` }}>
+                <h3 className="text-4xl font-bold mb-6" style={{ color: primaryColor }}>
+                  Ready to Get Started?
+                </h3>
+                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                  Don't let plumbing problems disrupt your day. Contact {business.name} now for fast, professional service.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="flex-1 px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift text-white"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    📞 Call {business.phone}
+                  </a>
+                  <button
+                    className="flex-1 px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift bg-white"
+                    style={{ borderColor: primaryColor, color: primaryColor }}
+                  >
+                    💬 Get Free Quote
+                  </button>
+                </div>
               </div>
             </div>
           </div>
