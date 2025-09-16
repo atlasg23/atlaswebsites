@@ -157,9 +157,21 @@ export async function saveTemplateCustomization(
       return true;
     } else {
       // First time - create version 1
+      // Get business UUID first
+      const { data: businessData, error: businessError } = await supabase
+        .from('plumbing_leads')
+        .select('uuid')
+        .eq('slug', slug)
+        .single();
+      
+      if (businessError || !businessData?.uuid) {
+        console.error('Error finding business UUID for first-time save:', businessError);
+        return false;
+      }
+      
       const newData = {
         business_slug: slug,
-        business_uuid: businessUuid,
+        business_uuid: businessData.uuid,
         template_name: 'plumbing3',
         custom_images: field === 'custom_images' ? { [key]: value } : {},
         custom_text: field === 'custom_text' ? { [key]: value } : {},

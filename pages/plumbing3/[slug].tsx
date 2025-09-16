@@ -58,13 +58,21 @@ export default function Plumbing3({ business, customization }: Props) {
       .replace(/{address}/gi, business.full_address);
   };
 
-  // Process text with HTML formatting
+  // Process text with HTML formatting and robust sanitization
   const renderFormattedText = (text: string) => {
     const processed = replacePlaceholders(text);
-    return processed
-      .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
-      .replace(/<i>(.*?)<\/i>/g, '<em>$1</em>')
-      .replace(/<u>(.*?)<\/u>/g, '<span style="text-decoration:underline">$1</span>');
+    
+    // Step 1: Remove all HTML tags first
+    const stripped = processed.replace(/<[^>]*>/g, '');
+    
+    // Step 2: Apply safe formatting only to the stripped text
+    const formatted = stripped
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **bold**
+      .replace(/\*(.*?)\*/g, '<em>$1</em>') // *italic*
+      .replace(/__(.*?)__/g, '<span style="text-decoration:underline">$1</span>') // __underline__
+      .replace(/\n/g, '<br>'); // newlines to br
+    
+    return formatted;
   };
 
   // Hero data with all customizations
@@ -159,23 +167,120 @@ export default function Plumbing3({ business, customization }: Props) {
     }
   };
 
-  // Handle button click
+  // Handle button click with URL validation
   const handleButtonClick = (button: typeof heroData.button1) => {
     switch (button.action) {
       case 'call':
-        window.location.href = `tel:${button.actionValue}`;
+        // Sanitize phone number: only allow digits, +, -, (, ), spaces
+        const sanitizedPhone = button.actionValue.replace(/[^0-9+\-\(\)\s]/g, '');
+        window.location.href = `tel:${sanitizedPhone}`;
         break;
       case 'email':
-        window.location.href = `mailto:${button.actionValue}`;
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(button.actionValue)) {
+          window.location.href = `mailto:${button.actionValue}`;
+        }
         break;
       case 'link':
-        window.open(button.actionValue, '_blank');
+        // Validate URL scheme: only allow http(s)
+        const url = button.actionValue;
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+          if (newWindow) newWindow.opener = null; // Defense in depth
+        } else {
+          console.warn('Blocked potentially unsafe URL:', url);
+        }
         break;
       case 'scroll':
-        const element = document.getElementById(button.actionValue);
+        // Validate element ID: only allow alphanumeric, dash, underscore
+        const elementId = button.actionValue.replace(/[^a-zA-Z0-9\-_]/g, '');
+        const element = document.getElementById(elementId);
         if (element) element.scrollIntoView({ behavior: 'smooth' });
         break;
     }
+  };
+
+  // About Services data with all customizations
+  const aboutServicesData = {
+    // Section settings
+    sectionEnabled: getDeviceValue('aboutServices_sectionEnabled', 'true') === 'true',
+    sectionHeight: getDeviceValue('aboutServices_sectionHeight', 'auto'),
+    sectionAnimation: getDeviceValue('aboutServices_sectionAnimation', 'fade-in'),
+    sectionBgColor: getDeviceValue('aboutServices_sectionBgColor', '#F8FAFC'),
+
+    // Main headline
+    headline: getDeviceValue('aboutServices_headline', `Professional Plumbing Services in ${business.city}`),
+    headlineSize: parseInt(getDeviceValue('aboutServices_headlineSize', '36')),
+    headlineFont: getDeviceValue('aboutServices_headlineFont', 'Inter'),
+    headlineWeight: getDeviceValue('aboutServices_headlineWeight', 'bold'),
+    headlineColor: getDeviceValue('aboutServices_headlineColor', '#1F2937'),
+    headlineAnimation: getDeviceValue('aboutServices_headlineAnimation', 'slide-up'),
+
+    // Subheadline
+    subheadline: getDeviceValue('aboutServices_subheadline', `With ${business.rating}/5 stars from ${business.reviews} satisfied customers, we're {business_name}'s trusted plumbing experts.`),
+    subheadlineSize: parseInt(getDeviceValue('aboutServices_subheadlineSize', '18')),
+    subheadlineFont: getDeviceValue('aboutServices_subheadlineFont', 'Inter'),
+    subheadlineWeight: getDeviceValue('aboutServices_subheadlineWeight', 'normal'),
+    subheadlineColor: getDeviceValue('aboutServices_subheadlineColor', '#6B7280'),
+    subheadlineAnimation: getDeviceValue('aboutServices_subheadlineAnimation', 'slide-up'),
+
+    // About text
+    aboutText: getDeviceValue('aboutServices_aboutText', `At {business_name}, we've been serving {city} and surrounding areas with reliable, professional plumbing services. Whether you need emergency repairs, routine maintenance, or complete installations, our licensed and insured team is ready to help 24/7.`),
+    aboutTextSize: parseInt(getDeviceValue('aboutServices_aboutTextSize', '16')),
+    aboutTextFont: getDeviceValue('aboutServices_aboutTextFont', 'Inter'),
+    aboutTextWeight: getDeviceValue('aboutServices_aboutTextWeight', 'normal'),
+    aboutTextColor: getDeviceValue('aboutServices_aboutTextColor', '#4B5563'),
+    aboutTextAnimation: getDeviceValue('aboutServices_aboutTextAnimation', 'fade-in'),
+
+    // Services grid
+    servicesEnabled: getDeviceValue('aboutServices_servicesEnabled', 'true') === 'true',
+    servicesHeadline: getDeviceValue('aboutServices_servicesHeadline', 'Our Expert Services'),
+    servicesHeadlineSize: parseInt(getDeviceValue('aboutServices_servicesHeadlineSize', '28')),
+    servicesHeadlineColor: getDeviceValue('aboutServices_servicesHeadlineColor', '#1F2937'),
+    
+    // Service items (customizable)
+    service1: {
+      enabled: getDeviceValue('aboutServices_service1Enabled', 'true') === 'true',
+      icon: getDeviceValue('aboutServices_service1Icon', '🔧'),
+      title: getDeviceValue('aboutServices_service1Title', 'Emergency Repairs'),
+      description: getDeviceValue('aboutServices_service1Description', '24/7 emergency plumbing repairs for urgent issues that can\'t wait.'),
+    },
+    service2: {
+      enabled: getDeviceValue('aboutServices_service2Enabled', 'true') === 'true',
+      icon: getDeviceValue('aboutServices_service2Icon', '🚿'),
+      title: getDeviceValue('aboutServices_service2Title', 'Fixture Installation'),
+      description: getDeviceValue('aboutServices_service2Description', 'Professional installation of faucets, sinks, toilets, and other fixtures.'),
+    },
+    service3: {
+      enabled: getDeviceValue('aboutServices_service3Enabled', 'true') === 'true',
+      icon: getDeviceValue('aboutServices_service3Icon', '🔥'),
+      title: getDeviceValue('aboutServices_service3Title', 'Water Heater Service'),
+      description: getDeviceValue('aboutServices_service3Description', 'Water heater repair, maintenance, and replacement services.'),
+    },
+    service4: {
+      enabled: getDeviceValue('aboutServices_service4Enabled', 'true') === 'true',
+      icon: getDeviceValue('aboutServices_service4Icon', '🌊'),
+      title: getDeviceValue('aboutServices_service4Title', 'Drain Cleaning'),
+      description: getDeviceValue('aboutServices_service4Description', 'Professional drain cleaning to remove clogs and improve flow.'),
+    },
+
+    // Call-to-action button
+    ctaButton: {
+      enabled: getDeviceValue('aboutServices_ctaEnabled', 'true') === 'true',
+      text: getDeviceValue('aboutServices_ctaText', 'Get Free Quote'),
+      action: getDeviceValue('aboutServices_ctaAction', 'call'),
+      actionValue: getDeviceValue('aboutServices_ctaActionValue', business.phone),
+      bgColor: getDeviceValue('aboutServices_ctaBgColor', business.primary_color || '#10B981'),
+      textColor: getDeviceValue('aboutServices_ctaTextColor', '#FFFFFF'),
+      size: getDeviceValue('aboutServices_ctaSize', 'large'),
+      animation: getDeviceValue('aboutServices_ctaAnimation', 'bounce'),
+    },
+
+    // Contact info
+    showContactInfo: getDeviceValue('aboutServices_showContactInfo', 'true') === 'true',
+    contactHeadline: getDeviceValue('aboutServices_contactHeadline', 'Contact Us Today'),
+    contactText: getDeviceValue('aboutServices_contactText', 'Ready to solve your plumbing problems? Call us now or request a free quote.'),
   };
 
   return (
@@ -298,11 +403,167 @@ export default function Plumbing3({ business, customization }: Props) {
           </div>
         </div>
 
-        {/* Placeholder sections for now */}
-        <div className="py-20 text-center">
-          <h2 className="text-3xl font-bold">More sections coming soon...</h2>
-          <p className="text-gray-600 mt-4">Services, About, Contact sections will be added next</p>
-        </div>
+        {/* About Services Section */}
+        {aboutServicesData.sectionEnabled && (
+          <section
+            className={`py-20 px-6 ${getAnimationClass(aboutServicesData.sectionAnimation)}`}
+            style={{ backgroundColor: aboutServicesData.sectionBgColor }}
+            id="about-services"
+          >
+            <div className="max-w-6xl mx-auto">
+              {/* Main Content */}
+              <div className="text-center mb-16">
+                {/* Headline */}
+                <h2
+                  className={`mb-6 ${getAnimationClass(aboutServicesData.headlineAnimation)}`}
+                  style={{
+                    color: aboutServicesData.headlineColor,
+                    fontSize: `${aboutServicesData.headlineSize}px`,
+                    fontFamily: aboutServicesData.headlineFont,
+                    fontWeight: aboutServicesData.headlineWeight as any
+                  }}
+                  dangerouslySetInnerHTML={{ __html: renderFormattedText(aboutServicesData.headline) }}
+                />
+
+                {/* Subheadline */}
+                <p
+                  className={`mb-8 max-w-4xl mx-auto ${getAnimationClass(aboutServicesData.subheadlineAnimation)}`}
+                  style={{
+                    color: aboutServicesData.subheadlineColor,
+                    fontSize: `${aboutServicesData.subheadlineSize}px`,
+                    fontFamily: aboutServicesData.subheadlineFont,
+                    fontWeight: aboutServicesData.subheadlineWeight as any
+                  }}
+                  dangerouslySetInnerHTML={{ __html: renderFormattedText(aboutServicesData.subheadline) }}
+                />
+
+                {/* About Text */}
+                <p
+                  className={`mb-12 max-w-3xl mx-auto leading-relaxed ${getAnimationClass(aboutServicesData.aboutTextAnimation)}`}
+                  style={{
+                    color: aboutServicesData.aboutTextColor,
+                    fontSize: `${aboutServicesData.aboutTextSize}px`,
+                    fontFamily: aboutServicesData.aboutTextFont,
+                    fontWeight: aboutServicesData.aboutTextWeight as any
+                  }}
+                  dangerouslySetInnerHTML={{ __html: renderFormattedText(aboutServicesData.aboutText) }}
+                />
+
+                {/* Business Info Cards */}
+                <div className="grid md:grid-cols-3 gap-6 mb-12">
+                  {/* Rating Card */}
+                  <div className="bg-white p-6 rounded-lg shadow-lg">
+                    <div className="text-3xl mb-2">⭐</div>
+                    <div className="text-2xl font-bold" style={{ color: aboutServicesData.headlineColor }}>
+                      {business.rating}/5
+                    </div>
+                    <div className="text-sm text-gray-600">{business.reviews} Reviews</div>
+                  </div>
+
+                  {/* Verified Badge */}
+                  {business.verified === 'true' && (
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                      <div className="text-3xl mb-2">✅</div>
+                      <div className="text-lg font-bold" style={{ color: aboutServicesData.headlineColor }}>
+                        Verified Business
+                      </div>
+                      <div className="text-sm text-gray-600">Licensed & Insured</div>
+                    </div>
+                  )}
+
+                  {/* Service Area */}
+                  <div className="bg-white p-6 rounded-lg shadow-lg">
+                    <div className="text-3xl mb-2">📍</div>
+                    <div className="text-lg font-bold" style={{ color: aboutServicesData.headlineColor }}>
+                      {business.city}, {business.state}
+                    </div>
+                    <div className="text-sm text-gray-600">Service Area</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Services Grid */}
+              {aboutServicesData.servicesEnabled && (
+                <div className="mb-16">
+                  <h3
+                    className="text-center mb-12"
+                    style={{
+                      color: aboutServicesData.servicesHeadlineColor,
+                      fontSize: `${aboutServicesData.servicesHeadlineSize}px`,
+                      fontFamily: aboutServicesData.headlineFont,
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {aboutServicesData.servicesHeadline}
+                  </h3>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[aboutServicesData.service1, aboutServicesData.service2, aboutServicesData.service3, aboutServicesData.service4].map((service, index) => 
+                      service.enabled && (
+                        <div key={index} className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow">
+                          <div className="text-4xl mb-4">{service.icon}</div>
+                          <h4 className="font-bold mb-3" style={{ color: aboutServicesData.headlineColor }}>
+                            {service.title}
+                          </h4>
+                          <p className="text-sm leading-relaxed" style={{ color: aboutServicesData.aboutTextColor }}>
+                            {service.description}
+                          </p>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Contact Section */}
+              {aboutServicesData.showContactInfo && (
+                <div className="text-center bg-white p-8 rounded-lg shadow-lg">
+                  <h3 
+                    className="text-2xl font-bold mb-4"
+                    style={{ color: aboutServicesData.headlineColor }}
+                  >
+                    {aboutServicesData.contactHeadline}
+                  </h3>
+                  <p 
+                    className="mb-6"
+                    style={{ color: aboutServicesData.aboutTextColor }}
+                  >
+                    {aboutServicesData.contactText}
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    {/* CTA Button */}
+                    {aboutServicesData.ctaButton.enabled && (
+                      <button
+                        className={`${getButtonSize(aboutServicesData.ctaButton.size)} rounded font-semibold ${getAnimationClass(aboutServicesData.ctaButton.animation)}`}
+                        style={{
+                          backgroundColor: aboutServicesData.ctaButton.bgColor,
+                          color: aboutServicesData.ctaButton.textColor
+                        }}
+                        onClick={() => handleButtonClick(aboutServicesData.ctaButton)}
+                      >
+                        {aboutServicesData.ctaButton.text}
+                      </button>
+                    )}
+                    
+                    {/* Contact Info */}
+                    <div className="text-center sm:text-left">
+                      <div className="text-xl font-bold" style={{ color: aboutServicesData.headlineColor }}>
+                        {business.phone}
+                      </div>
+                      {business.email_1 && (
+                        <div className="text-gray-600">{business.email_1}</div>
+                      )}
+                      {business.working_hours && (
+                        <div className="text-sm text-gray-500 mt-1">{business.working_hours}</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
       </div>
     </>
   );
