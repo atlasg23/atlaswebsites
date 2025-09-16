@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { getBusinessBySlug, PlumbingBusiness } from '../../lib/supabaseReader';
 import { getTemplateCustomization, TemplateCustomization } from '../../lib/templateCustomizations';
 
@@ -9,6 +10,42 @@ interface Props {
 }
 
 export default function Plumbing3({ business, customization }: Props) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Get device-specific value
+  const getDeviceValue = (key: string, defaultValue: any) => {
+    const suffix = isMobile ? '_mobile' : '_desktop';
+    const deviceKey = `${key}${suffix}`;
+
+    // Try device-specific value first
+    const deviceValue = customization?.custom_images?.[deviceKey] ||
+                       customization?.custom_text?.[deviceKey] ||
+                       customization?.custom_colors?.[deviceKey] ||
+                       customization?.custom_styles?.[deviceKey] ||
+                       customization?.custom_buttons?.[deviceKey];
+
+    // Fall back to base value if device-specific doesn't exist
+    if (deviceValue !== undefined) return deviceValue;
+
+    return customization?.custom_images?.[key] ||
+           customization?.custom_text?.[key] ||
+           customization?.custom_colors?.[key] ||
+           customization?.custom_styles?.[key] ||
+           customization?.custom_buttons?.[key] ||
+           defaultValue;
+  };
+
   // Replace placeholders with actual business data
   const replacePlaceholders = (text: string) => {
     if (!text) return '';
@@ -33,54 +70,54 @@ export default function Plumbing3({ business, customization }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Section settings
-    sectionHeight: customization?.custom_styles?.hero_sectionHeight || 'large',
-    sectionAnimation: customization?.custom_styles?.hero_sectionAnimation || 'none',
+    sectionHeight: getDeviceValue('hero_sectionHeight', 'large'),
+    sectionAnimation: getDeviceValue('hero_sectionAnimation', 'none'),
 
     // Image settings
-    image: customization?.custom_images?.hero_image || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920',
-    imagePosition: customization?.custom_styles?.hero_imagePosition || 'center center',
-    imageSize: customization?.custom_styles?.hero_imageSize || 'cover',
-    imageFilter: customization?.custom_styles?.hero_imageFilter || 'none',
-    overlayOpacity: parseInt(customization?.custom_colors?.hero_overlayOpacity || '50'),
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920'),
+    imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
+    imageSize: getDeviceValue('hero_imageSize', 'cover'),
+    imageFilter: getDeviceValue('hero_imageFilter', 'none'),
+    overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '50')),
 
     // Headline
-    headline: customization?.custom_text?.hero_headline || business.name,
-    headlineSize: parseInt(customization?.custom_styles?.hero_headlineSize || '48'),
-    headlineFont: customization?.custom_styles?.hero_headlineFont || 'Inter',
-    headlineWeight: customization?.custom_styles?.hero_headlineWeight || 'bold',
-    headlineColor: customization?.custom_colors?.hero_headlineColor || '#FFFFFF',
-    headlineAnimation: customization?.custom_styles?.hero_headlineAnimation || 'fade-in',
+    headline: getDeviceValue('hero_headline', business.name),
+    headlineSize: parseInt(getDeviceValue('hero_headlineSize', '48')),
+    headlineFont: getDeviceValue('hero_headlineFont', 'Inter'),
+    headlineWeight: getDeviceValue('hero_headlineWeight', 'bold'),
+    headlineColor: getDeviceValue('hero_headlineColor', '#FFFFFF'),
+    headlineAnimation: getDeviceValue('hero_headlineAnimation', 'fade-in'),
 
     // Subheadline
-    subheadline: customization?.custom_text?.hero_subheadline || `Professional Plumbing Services in ${business.city}, ${business.state}`,
-    subheadlineSize: parseInt(customization?.custom_styles?.hero_subheadlineSize || '20'),
-    subheadlineFont: customization?.custom_styles?.hero_subheadlineFont || 'Inter',
-    subheadlineWeight: customization?.custom_styles?.hero_subheadlineWeight || 'normal',
-    subheadlineColor: customization?.custom_colors?.hero_subheadlineColor || '#FFFFFF',
-    subheadlineAnimation: customization?.custom_styles?.hero_subheadlineAnimation || 'fade-in',
+    subheadline: getDeviceValue('hero_subheadline', `Professional Plumbing Services in ${business.city}, ${business.state}`),
+    subheadlineSize: parseInt(getDeviceValue('hero_subheadlineSize', '20')),
+    subheadlineFont: getDeviceValue('hero_subheadlineFont', 'Inter'),
+    subheadlineWeight: getDeviceValue('hero_subheadlineWeight', 'normal'),
+    subheadlineColor: getDeviceValue('hero_subheadlineColor', '#FFFFFF'),
+    subheadlineAnimation: getDeviceValue('hero_subheadlineAnimation', 'fade-in'),
 
     // Button 1
     button1: {
-      enabled: customization?.custom_buttons?.button1_enabled !== 'false',
-      text: customization?.custom_text?.hero_button1Text || 'Call Now',
-      action: customization?.custom_buttons?.button1_action || 'call',
-      actionValue: customization?.custom_buttons?.button1_actionValue || business.phone,
-      bgColor: customization?.custom_colors?.hero_button1BgColor || '#10B981',
-      textColor: customization?.custom_colors?.hero_button1Color || '#FFFFFF',
-      size: customization?.custom_buttons?.button1_size || 'medium',
-      animation: customization?.custom_styles?.hero_button1Animation || 'none',
+      enabled: getDeviceValue('hero_button1Enabled', 'true') === 'true',
+      text: getDeviceValue('hero_button1Text', 'Call Now'),
+      action: getDeviceValue('hero_button1_action', 'call'),
+      actionValue: getDeviceValue('hero_button1_actionValue', business.phone),
+      bgColor: getDeviceValue('hero_button1BgColor', '#10B981'),
+      textColor: getDeviceValue('hero_button1Color', '#FFFFFF'),
+      size: getDeviceValue('hero_button1Size', 'medium'),
+      animation: getDeviceValue('hero_button1Animation', 'none'),
     },
 
     // Button 2
     button2: {
-      enabled: customization?.custom_buttons?.button2_enabled !== 'false',
-      text: customization?.custom_text?.hero_button2Text || 'Get Quote',
-      action: customization?.custom_buttons?.button2_action || 'email',
-      actionValue: customization?.custom_buttons?.button2_actionValue || business.email_1 || '',
-      bgColor: customization?.custom_colors?.hero_button2BgColor || '#0066CC',
-      textColor: customization?.custom_colors?.hero_button2Color || '#FFFFFF',
-      size: customization?.custom_buttons?.button2_size || 'medium',
-      animation: customization?.custom_styles?.hero_button2Animation || 'none',
+      enabled: getDeviceValue('hero_button2Enabled', 'true') === 'true',
+      text: getDeviceValue('hero_button2Text', 'Get Quote'),
+      action: getDeviceValue('hero_button2_action', 'email'),
+      actionValue: getDeviceValue('hero_button2_actionValue', business.email_1 || ''),
+      bgColor: getDeviceValue('hero_button2BgColor', '#0066CC'),
+      textColor: getDeviceValue('hero_button2Color', '#FFFFFF'),
+      size: getDeviceValue('hero_button2Size', 'medium'),
+      animation: getDeviceValue('hero_button2Animation', 'none'),
     }
   };
 

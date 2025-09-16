@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { getBusinessBySlug, PlumbingBusiness } from '../../lib/supabaseReader';
 import { getTemplateCustomization, saveTemplateCustomization, publishTemplate } from '../../lib/templateCustomizations';
 import { RichTextEditor } from '../../components/RichTextEditor';
+import { VersionHistory } from '../../components/VersionHistory';
 import { debounce } from 'lodash';
 
 interface Props {
@@ -14,11 +15,24 @@ interface Props {
 
 type EditingElement = 'headline' | 'subheadline' | 'button1' | 'button2' | 'image' | 'section' | null;
 type DeviceView = 'desktop' | 'tablet' | 'mobile';
+type ApplyTo = 'desktop' | 'mobile' | 'both';
 
-// Google Fonts
+// Google Fonts with descriptions
 const FONT_FAMILIES = [
-  'Inter', 'Roboto', 'Open Sans', 'Montserrat', 'Poppins',
-  'Playfair Display', 'Raleway', 'Lato', 'Oswald', 'Merriweather'
+  { value: 'Inter', label: 'Inter (Clean & Modern)' },
+  { value: 'Roboto', label: 'Roboto (Google Style)' },
+  { value: 'Open Sans', label: 'Open Sans (Friendly)' },
+  { value: 'Montserrat', label: 'Montserrat (Professional)' },
+  { value: 'Poppins', label: 'Poppins (Rounded)' },
+  { value: 'Playfair Display', label: 'Playfair Display (Elegant Serif)' },
+  { value: 'Raleway', label: 'Raleway (Thin & Stylish)' },
+  { value: 'Lato', label: 'Lato (Humanist)' },
+  { value: 'Oswald', label: 'Oswald (Bold & Narrow)' },
+  { value: 'Merriweather', label: 'Merriweather (Classic Serif)' },
+  { value: 'Work Sans', label: 'Work Sans (Simple & Clean)' },
+  { value: 'DM Sans', label: 'DM Sans (Geometric)' },
+  { value: 'Space Grotesk', label: 'Space Grotesk (Tech)' },
+  { value: 'Outfit', label: 'Outfit (Contemporary)' },
 ];
 
 // Animation options
@@ -40,6 +54,11 @@ export default function EditorV3({ business, customization }: Props) {
   const [activeTab, setActiveTab] = useState<'content' | 'style' | 'advanced'>('content');
   const [hoveredElement, setHoveredElement] = useState<string | null>(null);
   const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
+  const [applyTo, setApplyTo] = useState<ApplyTo>('both');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [previousData, setPreviousData] = useState<any>(null);
 
   // Replace placeholders with actual data
   const replacePlaceholders = (text: string) => {
@@ -63,60 +82,259 @@ export default function EditorV3({ business, customization }: Props) {
       .replace(/<u>(.*?)<\/u>/g, '<span style="text-decoration:underline">$1</span>');
   };
 
+  // Get device-specific value or fallback to general
+  const getDeviceValue = (key: string, defaultValue: any) => {
+    // Check device-specific values based on current view
+    if (deviceView === 'mobile') {
+      const mobileKey = `${key}_mobile`;
+      const mobileValue = customization?.custom_styles?.[mobileKey] ||
+                         customization?.custom_colors?.[mobileKey] ||
+                         customization?.custom_text?.[mobileKey] ||
+                         customization?.custom_buttons?.[mobileKey];
+      if (mobileValue !== undefined) return mobileValue;
+    } else if (deviceView === 'desktop') {
+      const desktopKey = `${key}_desktop`;
+      const desktopValue = customization?.custom_styles?.[desktopKey] ||
+                           customization?.custom_colors?.[desktopKey] ||
+                           customization?.custom_text?.[desktopKey] ||
+                           customization?.custom_buttons?.[desktopKey];
+      if (desktopValue !== undefined) return desktopValue;
+    }
+    // Fallback to general value
+    return customization?.custom_styles?.[key] ||
+           customization?.custom_colors?.[key] ||
+           customization?.custom_text?.[key] ||
+           customization?.custom_buttons?.[key] ||
+           defaultValue;
+  };
+
   // Hero data with enhanced options
   const [heroData, setHeroData] = useState({
     // Section settings
-    sectionHeight: customization?.custom_styles?.hero_sectionHeight || 'large',
-    sectionAnimation: customization?.custom_styles?.hero_sectionAnimation || 'none',
+    sectionHeight: getDeviceValue('hero_sectionHeight', 'large'),
+    sectionAnimation: getDeviceValue('hero_sectionAnimation', 'none'),
 
     // Image settings
-    image: customization?.custom_images?.hero_image || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920',
-    imagePosition: customization?.custom_styles?.hero_imagePosition || 'center center',
-    imageSize: customization?.custom_styles?.hero_imageSize || 'cover',
-    imageFilter: customization?.custom_styles?.hero_imageFilter || 'none',
-    overlayOpacity: customization?.custom_colors?.hero_overlayOpacity || 50,
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920'),
+    imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
+    imageSize: getDeviceValue('hero_imageSize', 'cover'),
+    imageFilter: getDeviceValue('hero_imageFilter', 'none'),
+    overlayOpacity: getDeviceValue('hero_overlayOpacity', 50),
 
     // Headline
-    headline: customization?.custom_text?.hero_headline || business.name,
-    headlineSize: customization?.custom_styles?.hero_headlineSize || 48,
-    headlineFont: customization?.custom_styles?.hero_headlineFont || 'Inter',
-    headlineWeight: customization?.custom_styles?.hero_headlineWeight || 'bold',
-    headlineColor: customization?.custom_colors?.hero_headlineColor || '#FFFFFF',
-    headlineAnimation: customization?.custom_styles?.hero_headlineAnimation || 'fade-in',
+    headline: getDeviceValue('hero_headline', business.name),
+    headlineSize: getDeviceValue('hero_headlineSize', 48),
+    headlineFont: getDeviceValue('hero_headlineFont', 'Inter'),
+    headlineWeight: getDeviceValue('hero_headlineWeight', 'bold'),
+    headlineColor: getDeviceValue('hero_headlineColor', '#FFFFFF'),
+    headlineAnimation: getDeviceValue('hero_headlineAnimation', 'fade-in'),
 
     // Subheadline
-    subheadline: customization?.custom_text?.hero_subheadline || `Professional Plumbing Services in ${business.city}, ${business.state}`,
-    subheadlineSize: customization?.custom_styles?.hero_subheadlineSize || 20,
-    subheadlineFont: customization?.custom_styles?.hero_subheadlineFont || 'Inter',
-    subheadlineWeight: customization?.custom_styles?.hero_subheadlineWeight || 'normal',
-    subheadlineColor: customization?.custom_colors?.hero_subheadlineColor || '#FFFFFF',
-    subheadlineAnimation: customization?.custom_styles?.hero_subheadlineAnimation || 'fade-in',
+    subheadline: getDeviceValue('hero_subheadline', `Professional Plumbing Services in ${business.city}, ${business.state}`),
+    subheadlineSize: getDeviceValue('hero_subheadlineSize', 20),
+    subheadlineFont: getDeviceValue('hero_subheadlineFont', 'Inter'),
+    subheadlineWeight: getDeviceValue('hero_subheadlineWeight', 'normal'),
+    subheadlineColor: getDeviceValue('hero_subheadlineColor', '#FFFFFF'),
+    subheadlineAnimation: getDeviceValue('hero_subheadlineAnimation', 'fade-in'),
 
     // Buttons
     button1: {
-      enabled: customization?.custom_buttons?.button1_enabled !== false,
-      text: customization?.custom_text?.hero_button1Text || 'Call Now',
-      action: customization?.custom_buttons?.button1_action || 'call',
-      actionValue: customization?.custom_buttons?.button1_actionValue || business.phone,
-      bgColor: customization?.custom_colors?.hero_button1BgColor || '#10B981',
-      textColor: customization?.custom_colors?.hero_button1Color || '#FFFFFF',
-      size: customization?.custom_buttons?.button1_size || 'medium',
-      animation: customization?.custom_styles?.hero_button1Animation || 'none',
+      enabled: getDeviceValue('hero_button1Enabled', 'true') === 'true',
+      text: getDeviceValue('hero_button1Text', 'Call Now'),
+      action: getDeviceValue('hero_button1_action', 'call'),
+      actionValue: getDeviceValue('hero_button1_actionValue', business.phone),
+      bgColor: getDeviceValue('hero_button1BgColor', '#10B981'),
+      textColor: getDeviceValue('hero_button1Color', '#FFFFFF'),
+      size: getDeviceValue('hero_button1Size', 'medium'),
+      animation: getDeviceValue('hero_button1Animation', 'none'),
     },
 
     button2: {
-      enabled: customization?.custom_buttons?.button2_enabled !== false,
-      text: customization?.custom_text?.hero_button2Text || 'Get Quote',
-      action: customization?.custom_buttons?.button2_action || 'email',
-      actionValue: customization?.custom_buttons?.button2_actionValue || business.email_1 || '',
-      bgColor: customization?.custom_colors?.hero_button2BgColor || '#0066CC',
-      textColor: customization?.custom_colors?.hero_button2Color || '#FFFFFF',
-      size: customization?.custom_buttons?.button2_size || 'medium',
-      animation: customization?.custom_styles?.hero_button2Animation || 'none',
+      enabled: getDeviceValue('hero_button2Enabled', 'true') === 'true',
+      text: getDeviceValue('hero_button2Text', 'Get Quote'),
+      action: getDeviceValue('hero_button2_action', 'email'),
+      actionValue: getDeviceValue('hero_button2_actionValue', business.email_1 || ''),
+      bgColor: getDeviceValue('hero_button2BgColor', '#0066CC'),
+      textColor: getDeviceValue('hero_button2Color', '#FFFFFF'),
+      size: getDeviceValue('hero_button2Size', 'medium'),
+      animation: getDeviceValue('hero_button2Animation', 'none'),
     }
   });
 
-  // Save changes
+  // Update heroData when device view changes
+  useEffect(() => {
+    setHeroData({
+      // Section settings
+      sectionHeight: getDeviceValue('hero_sectionHeight', 'large'),
+      sectionAnimation: getDeviceValue('hero_sectionAnimation', 'none'),
+
+      // Image settings
+      image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920'),
+      imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
+      imageSize: getDeviceValue('hero_imageSize', 'cover'),
+      imageFilter: getDeviceValue('hero_imageFilter', 'none'),
+      overlayOpacity: getDeviceValue('hero_overlayOpacity', 50),
+
+      // Headline
+      headline: getDeviceValue('hero_headline', business.name),
+      headlineSize: getDeviceValue('hero_headlineSize', 48),
+      headlineFont: getDeviceValue('hero_headlineFont', 'Inter'),
+      headlineWeight: getDeviceValue('hero_headlineWeight', 'bold'),
+      headlineColor: getDeviceValue('hero_headlineColor', '#FFFFFF'),
+      headlineAnimation: getDeviceValue('hero_headlineAnimation', 'fade-in'),
+
+      // Subheadline
+      subheadline: getDeviceValue('hero_subheadline', `Professional Plumbing Services in ${business.city}, ${business.state}`),
+      subheadlineSize: getDeviceValue('hero_subheadlineSize', 20),
+      subheadlineFont: getDeviceValue('hero_subheadlineFont', 'Inter'),
+      subheadlineWeight: getDeviceValue('hero_subheadlineWeight', 'normal'),
+      subheadlineColor: getDeviceValue('hero_subheadlineColor', '#FFFFFF'),
+      subheadlineAnimation: getDeviceValue('hero_subheadlineAnimation', 'fade-in'),
+
+      // Buttons
+      button1: {
+        enabled: getDeviceValue('hero_button1Enabled', 'true') === 'true',
+        text: getDeviceValue('hero_button1Text', 'Call Now'),
+        action: getDeviceValue('hero_button1_action', 'call'),
+        actionValue: getDeviceValue('hero_button1_actionValue', business.phone),
+        bgColor: getDeviceValue('hero_button1BgColor', '#10B981'),
+        textColor: getDeviceValue('hero_button1Color', '#FFFFFF'),
+        size: getDeviceValue('hero_button1Size', 'medium'),
+        animation: getDeviceValue('hero_button1Animation', 'none'),
+      },
+
+      button2: {
+        enabled: getDeviceValue('hero_button2Enabled', 'true') === 'true',
+        text: getDeviceValue('hero_button2Text', 'Get Quote'),
+        action: getDeviceValue('hero_button2_action', 'email'),
+        actionValue: getDeviceValue('hero_button2_actionValue', business.email_1 || ''),
+        bgColor: getDeviceValue('hero_button2BgColor', '#0066CC'),
+        textColor: getDeviceValue('hero_button2Color', '#FFFFFF'),
+        size: getDeviceValue('hero_button2Size', 'medium'),
+        animation: getDeviceValue('hero_button2Animation', 'none'),
+      }
+    });
+  }, [deviceView]); // Re-run when device view changes
+
+  // Save changes with device-specific handling
+  const saveChangesWithDevice = useCallback(
+    async (data: any, applyTo: ApplyTo) => {
+      setIsSaving(true);
+      const savePromises = [];
+      const historyEdits = [];
+
+      // Store previous data for history tracking
+      if (!previousData) {
+        setPreviousData(heroData);
+      }
+
+      // Determine suffixes based on applyTo
+      const suffixes = applyTo === 'both' ? ['', '_mobile', '_desktop'] :
+                      applyTo === 'mobile' ? ['_mobile'] :
+                      ['_desktop'];
+
+      // Save to appropriate keys based on device selection
+      for (const suffix of suffixes) {
+        // Images
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_images', `hero_image${suffix}`, data.image));
+
+        // Text content
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_headline${suffix}`, data.headline));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_subheadline${suffix}`, data.subheadline));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_button1Text${suffix}`, data.button1.text));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_text', `hero_button2Text${suffix}`, data.button2.text));
+
+        // Colors
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_headlineColor${suffix}`, data.headlineColor));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_subheadlineColor${suffix}`, data.subheadlineColor));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button1BgColor${suffix}`, data.button1.bgColor));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button1Color${suffix}`, data.button1.textColor));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button2BgColor${suffix}`, data.button2.bgColor));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_button2Color${suffix}`, data.button2.textColor));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_colors', `hero_overlayOpacity${suffix}`, data.overlayOpacity.toString()));
+
+        // Styles
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_sectionHeight${suffix}`, data.sectionHeight));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_sectionAnimation${suffix}`, data.sectionAnimation));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_imagePosition${suffix}`, data.imagePosition));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_imageSize${suffix}`, data.imageSize));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_imageFilter${suffix}`, data.imageFilter));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineSize${suffix}`, data.headlineSize.toString()));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineFont${suffix}`, data.headlineFont));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineWeight${suffix}`, data.headlineWeight));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_headlineAnimation${suffix}`, data.headlineAnimation));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineSize${suffix}`, data.subheadlineSize.toString()));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineFont${suffix}`, data.subheadlineFont));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineWeight${suffix}`, data.subheadlineWeight));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_styles', `hero_subheadlineAnimation${suffix}`, data.subheadlineAnimation));
+
+        // Buttons
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button1Enabled${suffix}`, data.button1.enabled.toString()));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button1Size${suffix}`, data.button1.size));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button1Animation${suffix}`, data.button1.animation));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button2Enabled${suffix}`, data.button2.enabled.toString()));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button2Size${suffix}`, data.button2.size));
+        savePromises.push(saveTemplateCustomization(business.slug, 'custom_buttons', `hero_button2Animation${suffix}`, data.button2.animation));
+      }
+
+      await Promise.all(savePromises);
+
+      // Track history - compare what changed
+      if (previousData) {
+        const changes: any[] = [];
+
+        // Check each field for changes
+        Object.keys(data).forEach(key => {
+          if (JSON.stringify(data[key]) !== JSON.stringify(previousData[key])) {
+            if (typeof data[key] === 'object') {
+              // Handle nested objects like buttons
+              Object.keys(data[key]).forEach(subKey => {
+                if (data[key][subKey] !== previousData[key]?.[subKey]) {
+                  changes.push({
+                    field: key.includes('button') ? 'custom_buttons' : 'custom_styles',
+                    key: `hero_${key}${subKey.charAt(0).toUpperCase() + subKey.slice(1)}`,
+                    oldValue: previousData[key]?.[subKey],
+                    newValue: data[key][subKey],
+                    deviceType: applyTo
+                  });
+                }
+              });
+            } else {
+              const fieldType = key.includes('Color') ? 'custom_colors' :
+                              key.includes('headline') || key.includes('subheadline') ? 'custom_text' :
+                              key === 'image' ? 'custom_images' : 'custom_styles';
+
+              changes.push({
+                field: fieldType,
+                key: `hero_${key}`,
+                oldValue: previousData[key],
+                newValue: data[key],
+                deviceType: applyTo
+              });
+            }
+          }
+        });
+
+        // Save history if there are changes
+        if (changes.length > 0) {
+          fetch('/api/edit-history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug: business.slug, edits: changes })
+          }).catch(console.error);
+        }
+      }
+
+      setPreviousData(data);
+      setIsSaving(false);
+      setSaveStatus('saved');
+      setHasUnsavedChanges(false);
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    },
+    [business.slug]
+  );
+
+  // Save changes (legacy - for backward compatibility)
   const saveChanges = useCallback(
     debounce(async (data: any) => {
       setIsSaving(true);
@@ -179,8 +397,10 @@ export default function EditorV3({ business, customization }: Props) {
   const updateHeroData = (updates: any) => {
     const newData = { ...heroData, ...updates };
     setHeroData(newData);
-    saveChanges(newData);
+    setHasUnsavedChanges(true);
+    setSaveStatus('idle');
   };
+
 
   // Get section height class
   const getSectionHeight = () => {
@@ -233,7 +453,7 @@ export default function EditorV3({ business, customization }: Props) {
     <>
       <Head>
         <title>{`Pro Editor - ${business.name}`}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&family=Raleway:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700;900&family=Oswald:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700;900&family=Work+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; }
@@ -315,7 +535,19 @@ export default function EditorV3({ business, customization }: Props) {
           </div>
 
           <div className="flex items-center gap-3">
-            {isSaving && <span className="text-sm text-gray-500 animate-pulse">Saving...</span>}
+            {hasUnsavedChanges && (
+              <span className="text-sm text-orange-600 font-medium">
+                ⚠ Unsaved Changes
+              </span>
+            )}
+            {!hasUnsavedChanges && saveStatus === 'saved' && (
+              <span className="text-sm text-green-600">
+                ✓ All Saved
+              </span>
+            )}
+            <button onClick={() => setShowHistory(true)} className="px-4 py-2 text-sm border rounded hover:bg-gray-50">
+              History
+            </button>
             <a href={`/plumbing3/${business.slug}`} target="_blank" className="px-4 py-2 text-sm border rounded hover:bg-gray-50">
               View Live
             </a>
@@ -449,14 +681,46 @@ export default function EditorV3({ business, customization }: Props) {
             {editingElement ? (
               <>
                 {/* Element Header */}
-                <div className="border-b px-4 py-3 bg-gray-50 flex justify-between items-center">
-                  <h3 className="font-semibold capitalize">
-                    {editingElement === 'button1' ? 'Button 1' :
-                     editingElement === 'button2' ? 'Button 2' :
-                     editingElement === 'section' ? 'Section Settings' : editingElement}
-                  </h3>
-                  <button onClick={() => setEditingElement(null)} className="text-gray-500 hover:text-gray-700">
-                    ✕
+                <div className="border-b px-4 py-3 bg-gray-50">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-semibold capitalize">
+                      {editingElement === 'button1' ? 'Button 1' :
+                       editingElement === 'button2' ? 'Button 2' :
+                       editingElement === 'section' ? 'Section Settings' : editingElement}
+                    </h3>
+                    <button onClick={() => setEditingElement(null)} className="text-gray-500 hover:text-gray-700">
+                      ✕
+                    </button>
+                  </div>
+
+                  {/* Apply To Selector */}
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium text-gray-700">Apply to:</label>
+                    <select
+                      value={applyTo}
+                      onChange={(e) => setApplyTo(e.target.value as ApplyTo)}
+                      className="flex-1 px-2 py-1 border rounded text-sm"
+                    >
+                      <option value="both">All Devices</option>
+                      <option value="desktop">Desktop Only</option>
+                      <option value="mobile">Mobile Only</option>
+                    </select>
+                  </div>
+
+                  {/* Save Button */}
+                  <button
+                    onClick={() => saveChangesWithDevice(heroData, applyTo)}
+                    disabled={isSaving || !hasUnsavedChanges}
+                    className={`mt-3 w-full px-4 py-2 font-medium text-white rounded transition-colors ${
+                      isSaving ? 'bg-gray-400' :
+                      !hasUnsavedChanges ? 'bg-gray-300' :
+                      'bg-blue-600 hover:bg-blue-700'
+                    }`}
+                  >
+                    {isSaving ? 'Saving...' :
+                     saveStatus === 'saved' && !hasUnsavedChanges ? 'All Changes Saved ✓' :
+                     hasUnsavedChanges ? `Save Changes${applyTo === 'both' ? '' : ` (${applyTo} only)`}` :
+                     'No Changes'}
                   </button>
                 </div>
 
@@ -620,21 +884,29 @@ export default function EditorV3({ business, customization }: Props) {
                               className="w-full px-3 py-2 border rounded"
                             >
                               {FONT_FAMILIES.map(font => (
-                                <option key={font} value={font}>{font}</option>
+                                <option key={font.value} value={font.value}>{font.label}</option>
                               ))}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-sm font-medium mb-2">Size</label>
-                            <input
-                              type="range"
-                              min="24"
-                              max="72"
-                              value={heroData.headlineSize}
-                              onChange={(e) => updateHeroData({ headlineSize: parseInt(e.target.value) })}
-                              className="w-full"
-                            />
-                            <span className="text-sm text-gray-500">{heroData.headlineSize}px</span>
+                            <label className="block text-sm font-medium mb-2">Font Size</label>
+                            <div className="flex gap-2">
+                              <input
+                                type="number"
+                                min="12"
+                                max="120"
+                                value={heroData.headlineSize}
+                                onChange={(e) => updateHeroData({ headlineSize: parseInt(e.target.value) || 48 })}
+                                className="flex-1 px-3 py-2 border rounded"
+                              />
+                              <span className="px-3 py-2 bg-gray-50 border rounded text-sm">px</span>
+                            </div>
+                            <div className="flex gap-1 mt-2">
+                              <button onClick={() => updateHeroData({ headlineSize: 36 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">36</button>
+                              <button onClick={() => updateHeroData({ headlineSize: 48 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">48</button>
+                              <button onClick={() => updateHeroData({ headlineSize: 60 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">60</button>
+                              <button onClick={() => updateHeroData({ headlineSize: 72 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">72</button>
+                            </div>
                           </div>
                           <div>
                             <label className="block text-sm font-medium mb-2">Weight</label>
@@ -712,21 +984,29 @@ export default function EditorV3({ business, customization }: Props) {
                               className="w-full px-3 py-2 border rounded"
                             >
                               {FONT_FAMILIES.map(font => (
-                                <option key={font} value={font}>{font}</option>
+                                <option key={font.value} value={font.value}>{font.label}</option>
                               ))}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-sm font-medium mb-2">Size</label>
-                            <input
-                              type="range"
-                              min="14"
-                              max="32"
-                              value={heroData.subheadlineSize}
-                              onChange={(e) => updateHeroData({ subheadlineSize: parseInt(e.target.value) })}
-                              className="w-full"
-                            />
-                            <span className="text-sm text-gray-500">{heroData.subheadlineSize}px</span>
+                            <label className="block text-sm font-medium mb-2">Font Size</label>
+                            <div className="flex gap-2">
+                              <input
+                                type="number"
+                                min="10"
+                                max="60"
+                                value={heroData.subheadlineSize}
+                                onChange={(e) => updateHeroData({ subheadlineSize: parseInt(e.target.value) || 20 })}
+                                className="flex-1 px-3 py-2 border rounded"
+                              />
+                              <span className="px-3 py-2 bg-gray-50 border rounded text-sm">px</span>
+                            </div>
+                            <div className="flex gap-1 mt-2">
+                              <button onClick={() => updateHeroData({ subheadlineSize: 16 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">16</button>
+                              <button onClick={() => updateHeroData({ subheadlineSize: 18 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">18</button>
+                              <button onClick={() => updateHeroData({ subheadlineSize: 20 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">20</button>
+                              <button onClick={() => updateHeroData({ subheadlineSize: 24 })} className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">24</button>
+                            </div>
                           </div>
                           <div>
                             <label className="block text-sm font-medium mb-2">Weight</label>
@@ -1029,6 +1309,26 @@ export default function EditorV3({ business, customization }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Version History Modal */}
+      <VersionHistory
+        slug={business.slug}
+        isOpen={showHistory}
+        onClose={() => setShowHistory(false)}
+        onRestore={(restoredData) => {
+          // Apply restored data
+          const updatedData = { ...heroData, ...restoredData };
+          if (restoredData.button1) {
+            updatedData.button1 = { ...heroData.button1, ...restoredData.button1 };
+          }
+          if (restoredData.button2) {
+            updatedData.button2 = { ...heroData.button2, ...restoredData.button2 };
+          }
+          setHeroData(updatedData);
+          setHasUnsavedChanges(true);
+          setSaveStatus('idle');
+        }}
+      />
     </>
   );
 }
