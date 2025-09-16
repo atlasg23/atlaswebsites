@@ -124,7 +124,7 @@ export default function Editor({ business, customization }: Props) {
   return (
     <>
       <Head>
-        <title>Editor - {business.name}</title>
+        <title>{`Editor - ${business.name}`}</title>
       </Head>
 
       <div className="h-screen flex flex-col bg-gray-50">
