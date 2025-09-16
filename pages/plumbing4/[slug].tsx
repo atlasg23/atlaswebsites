@@ -141,6 +141,18 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
         <title>{`${replacePlaceholders(heroData.headline)} | ${business.name}`}</title>
         <meta name="description" content={replacePlaceholders(heroData.description)} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={`${replacePlaceholders(heroData.headline)} | ${business.name}`} />
+        <meta property="og:description" content={replacePlaceholders(heroData.description)} />
+        <meta property="og:image" content={heroData.image} />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={`${replacePlaceholders(heroData.headline)} | ${business.name}`} />
+        <meta property="twitter:description" content={replacePlaceholders(heroData.description)} />
+        <meta property="twitter:image" content={heroData.image} />
       </Head>
 
       <style jsx global>{`
