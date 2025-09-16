@@ -18,33 +18,37 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Apify configuration
 const APIFY_TOKEN = 'apify_api_DrC4qdJIT1ethXdgpU2tEqZeaobP0h4EfLZ3';
 const APIFY_ACTOR_ID = 'compass~google-maps-reviews-scraper';
-const MAX_BUSINESSES = 5; // Test with 5 businesses
+const MAX_BUSINESSES = 1; // Test with 1 business first
 const MAX_REVIEWS_PER_BUSINESS = 10; // Maximum 10 reviews per business
 
 async function fetchReviewsFromApify(placeId, businessName) {
   try {
     console.log(`\nFetching reviews for ${businessName} (${placeId})...`);
 
+    // Use place ID directly as the query
     const input = {
       queries: [placeId],
       maxReviews: MAX_REVIEWS_PER_BUSINESS,
       reviewsSort: 'newest',
       language: 'en',
-      personalData: false
+      personalData: false,
+      scrapeReviewId: true,
+      scrapeReviewUrl: true,
+      scrapeReviewPhoto: true,
+      scrapeReviewerName: true,
+      scrapeReviewerUrl: true,
+      searchPlace: true
     };
 
-    // Call Apify actor
+    // Call Apify actor with sync endpoint
     const response = await axios.post(
-      `https://api.apify.com/v2/acts/${APIFY_ACTOR_ID}/run-sync-get-dataset-items`,
+      `https://api.apify.com/v2/acts/${APIFY_ACTOR_ID}/run-sync-get-dataset-items?token=${APIFY_TOKEN}`,
       input,
       {
         headers: {
           'Content-Type': 'application/json'
         },
-        params: {
-          token: APIFY_TOKEN
-        },
-        timeout: 60000 // 60 seconds timeout
+        timeout: 120000 // 120 seconds timeout
       }
     );
 
@@ -74,6 +78,10 @@ async function fetchReviewsFromApify(placeId, businessName) {
     return [];
   } catch (error) {
     console.error(`  Error fetching reviews for ${businessName}:`, error.message);
+    if (error.response) {
+      console.error(`  Response status: ${error.response.status}`);
+      console.error(`  Response data:`, JSON.stringify(error.response.data, null, 2));
+    }
     return [];
   }
 }
