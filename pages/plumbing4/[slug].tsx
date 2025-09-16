@@ -450,7 +450,262 @@ export default function Plumbing4({ business, customization }: Props) {
           </div>
         </section>
 
-        
+        {/* Services Section - Image-Based */}
+        <section id="services" className="py-20 px-6 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
+                {replacePlaceholders(getDeviceValue('services_headline', 'Our Professional Services'))}
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                {replacePlaceholders(getDeviceValue('services_subheadline', 'Expert plumbing solutions for your home and business. We handle everything from emergency repairs to complete installations.'))}
+              </p>
+            </div>
+
+            {/* Services Grid with Images */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {/* Service 1: Emergency Plumbing */}
+              <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={getDeviceValue('service1_image', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop')}
+                    alt="Emergency Plumbing"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
+                  <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                    24/7
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3" style={{ color: primaryColor }}>
+                    {getDeviceValue('service1_title', 'Emergency Plumbing')}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {getDeviceValue('service1_description', 'Available 24/7 for urgent plumbing emergencies. Fast response times and expert solutions when you need them most.')}
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      24/7 Emergency Service
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Burst Pipe Repairs
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Water Leak Detection
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Service 2: Drain Cleaning */}
+              <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={getDeviceValue('service2_image', 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop')}
+                    alt="Drain Cleaning"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3" style={{ color: primaryColor }}>
+                    {getDeviceValue('service2_title', 'Drain Cleaning')}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {getDeviceValue('service2_description', 'Professional drain cleaning services to clear clogs and keep your plumbing flowing smoothly.')}
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Hydro Jetting
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Sewer Line Cleaning
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Root Removal
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Service 3: Water Heater Services */}
+              <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={getDeviceValue('service3_image', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop')}
+                    alt="Water Heater Services"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3" style={{ color: primaryColor }}>
+                    {getDeviceValue('service3_title', 'Water Heater Services')}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {getDeviceValue('service3_description', 'Complete water heater installation, repair, and maintenance for both tank and tankless systems.')}
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Installation & Replacement
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Tankless Systems
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Annual Maintenance
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Service 4: Pipe Repair & Replacement */}
+              <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={getDeviceValue('service4_image', 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=400&h=300&fit=crop')}
+                    alt="Pipe Repair"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3" style={{ color: primaryColor }}>
+                    {getDeviceValue('service4_title', 'Pipe Repair & Replacement')}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {getDeviceValue('service4_description', 'Expert pipe repair and replacement using modern materials and techniques for lasting solutions.')}
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Trenchless Repair
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Copper & PEX Installation
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Leak Detection
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Service 5: Fixture Installation */}
+              <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={getDeviceValue('service5_image', 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=400&h=300&fit=crop')}
+                    alt="Fixture Installation"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3" style={{ color: primaryColor }}>
+                    {getDeviceValue('service5_title', 'Fixture Installation')}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {getDeviceValue('service5_description', 'Professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures.')}
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Faucets & Sinks
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Toilet Installation
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Shower & Tub Systems
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Service 6: Sewer Line Services */}
+              <div className="group bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={getDeviceValue('service6_image', 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop')}
+                    alt="Sewer Line Services"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-30 transition-all"></div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-3" style={{ color: primaryColor }}>
+                    {getDeviceValue('service6_title', 'Sewer Line Services')}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {getDeviceValue('service6_description', 'Complete sewer line inspection, cleaning, and repair services using advanced technology.')}
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Camera Inspection
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Trenchless Replacement
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      Root & Blockage Removal
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Call to Action Section */}
+            <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+              <h3 className="text-3xl font-bold mb-4" style={{ color: primaryColor }}>
+                {getDeviceValue('services_cta_headline', 'Need Professional Plumbing Service?')}
+              </h3>
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                {replacePlaceholders(getDeviceValue('services_cta_description', 'Contact {business_name} today for fast, reliable plumbing services. We provide free estimates and emergency support.'))}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href={`tel:${business.phone}`}
+                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift"
+                  style={{
+                    backgroundColor: primaryColor,
+                    color: 'white'
+                  }}
+                >
+                  📞 Call {business.phone}
+                </a>
+                <button
+                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift"
+                  style={{
+                    borderColor: primaryColor,
+                    color: primaryColor,
+                    backgroundColor: 'transparent'
+                  }}
+                >
+                  💬 Get Free Quote
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section id="contact" className="py-20 px-6 bg-gray-900 text-white">
           <div className="max-w-6xl mx-auto text-center">
