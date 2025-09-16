@@ -1,0 +1,42 @@
+ export interface PlumbingBusiness {
+    id?: number;                                    // Primary key
+    name: string;                                   // Business name
+    site: string;                                   // Website URL
+    subtypes: string;                               // Business subtypes
+    category: string;                               // Business category
+    type: string;                                   // Business type
+    phone: string;                                  // Phone number
+    phone_phones_enricher_carrier_name: string;    // Phone carrier name
+    phone_phones_enricher_carrier_type: string;    // Phone carrier type
+    latitude: string;                               // GPS latitude
+    longitude: string;                              // GPS longitude
+    full_address: string;                           // Complete address
+    city: string;                                   // City
+    state: string;                                  // State
+    area_service: string;                           // Service area
+    rating: string;                                 // Google rating
+    reviews: string;                                // Number of reviews
+    reviews_link: string;                           // Link to Google reviews
+    photos_count: string;                           // Number of photos
+    working_hours: string;                          // Business hours
+    verified: string;                               // Verification status
+    location_link: string;                          // Google Maps link
+    place_id: string;                              // Google Places ID
+    email_1: string;                               // Primary email
+    email_1_emails_validator_status: string;       // Email validation status
+    facebook: string;                              // Facebook URL
+    instagram: string;                             // Instagram URL
+    logo: string;                                  // Logo image URL
+    primary_color: string;                         // Brand primary color (hex)
+    secondary_color: string;                       // Brand secondary color (hex)
+    slug: string;                                  // URL-friendly business identifier
+  }
+
+  Key fields for customization:
+  - slug - Used for conditional business-specific features
+  - name, city, state - Business identification
+  - phone, email_1 - Contact info
+  - rating, reviews - Social proof
+  - primary_color, secondary_color - Brand colors
+  - logo - Brand image
+  - working_hours - Hours of operation
