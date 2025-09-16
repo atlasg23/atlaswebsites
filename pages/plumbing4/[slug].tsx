@@ -459,7 +459,7 @@ export default function Plumbing4({ business, customization }: Props) {
         <section id="services" className="py-20 px-6 bg-gray-50">
           <div className="max-w-6xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-8" style={{ color: primaryColor }}>
-              Our Services
+              {business.name} Services
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
               {/* Service 1: Emergency Plumbing */}
