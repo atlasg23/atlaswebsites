@@ -187,6 +187,90 @@ export default function Plumbing2({ business }: Props) {
           </div>
         </section>
 
+        {/* Financing Section - Only for prestigeplumbingrepairllc-2 */}
+        {business.slug === 'prestigeplumbingrepairllc-2' && (
+          <section className="py-20 px-6 bg-blue-50">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold mb-4" style={{ color: primaryColor }}>
+                  Flexible Financing Options
+                </h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                  Don't let budget concerns delay necessary plumbing repairs. We offer flexible financing options to make quality plumbing services affordable for everyone.
+                </p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-8 mb-12">
+                <div className="bg-white p-8 rounded-xl shadow-lg text-center">
+                  <div className="text-5xl mb-4">💳</div>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: primaryColor }}>
+                    No Interest Options
+                  </h3>
+                  <p className="text-gray-600">
+                    0% interest financing available for qualified customers on approved credit.
+                  </p>
+                </div>
+                <div className="bg-white p-8 rounded-xl shadow-lg text-center">
+                  <div className="text-5xl mb-4">📅</div>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: primaryColor }}>
+                    Extended Payment Plans
+                  </h3>
+                  <p className="text-gray-600">
+                    Spread your payments over 6, 12, or 24 months with low monthly payments.
+                  </p>
+                </div>
+                <div className="bg-white p-8 rounded-xl shadow-lg text-center">
+                  <div className="text-5xl mb-4">⚡</div>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: primaryColor }}>
+                    Quick Approval
+                  </h3>
+                  <p className="text-gray-600">
+                    Fast, easy application process with approval decisions in minutes, not days.
+                  </p>
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl p-8 shadow-lg">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
+                      Apply for Financing Today
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Our financing partners work with customers of all credit types. Get pre-approved in minutes and start your plumbing project today.
+                    </p>
+                    <ul className="space-y-2 text-gray-600">
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        No prepayment penalties
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        Multiple financing partners
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        Competitive rates and terms
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white mb-4">
+                      <div className="text-3xl font-bold mb-2">Get Pre-Approved</div>
+                      <div className="text-sm opacity-90">Quick & Easy Application</div>
+                    </div>
+                    <a
+                      href={`tel:${business.phone}`}
+                      className="inline-block bg-green-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-green-700 transition-colors"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      Call to Apply: {business.phone}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Reviews Section */}
         <section className="py-20 px-6 bg-gray-100">
           <div className="max-w-6xl mx-auto">
