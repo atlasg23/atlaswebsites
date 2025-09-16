@@ -161,10 +161,11 @@ export default function Plumbing4({ business, customization }: Props) {
           <div className="max-w-7xl mx-auto px-4">
             {/* Mobile Layout */}
             <div className="md:hidden">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col space-y-2">
+              <div className="flex items-center justify-center w-full relative">
+                {/* Centered Content */}
+                <div className="flex flex-col items-center space-y-2">
                   {/* Business Name */}
-                  <h1 className={`text-lg font-bold ${
+                  <h1 className={`text-lg font-bold text-center ${
                     isScrolled ? 'text-gray-900' : 'text-white text-shadow'
                   }`}>
                     {business.name}
@@ -173,7 +174,7 @@ export default function Plumbing4({ business, customization }: Props) {
                   {/* Phone Number */}
                   <a
                     href={`tel:${business.phone}`}
-                    className="px-3 py-1 rounded-full font-semibold text-sm transition-all w-fit"
+                    className="px-3 py-1 rounded-full font-semibold text-sm transition-all"
                     style={{ 
                       backgroundColor: primaryColor,
                       color: 'white'
@@ -184,7 +185,7 @@ export default function Plumbing4({ business, customization }: Props) {
 
                   {/* Rating Display - Show only if 4.5+ stars */}
                   {parseFloat(business.rating) >= 4.5 && (
-                    <div className={`flex items-center space-x-2 ${
+                    <div className={`flex items-center justify-center space-x-2 ${
                       isScrolled ? 'text-gray-700' : 'text-white'
                     }`}>
                       <div className="flex items-center">
@@ -204,7 +205,8 @@ export default function Plumbing4({ business, customization }: Props) {
                   )}
                 </div>
 
-                <button className="p-2">
+                {/* Menu Button - Positioned absolutely to top-right */}
+                <button className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2">
                   <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
                   <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
                   <div className={`w-6 h-0.5 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
