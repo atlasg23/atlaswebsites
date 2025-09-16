@@ -30,7 +30,7 @@ export default function Plumbing4({ business, customization }: Props) {
 
     return () => {
       window.removeEventListener('resize', checkMobile);
-      window.removeEventListener('scroll', handleScroll);
+      window.addEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -78,7 +78,7 @@ export default function Plumbing4({ business, customization }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Image settings
-    image: getDeviceValue('hero_image', 'https://media.istockphoto.com/id/874169110/photo/plumber-installs-a-new-siphon.jpg?s=612x612&w=0&k=20&c=NfTPoT63YEiEXqvxhmRKNfWJz-PtG2Gy3wo4xXg18CQ='),
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200'),
     imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
     imageSize: getDeviceValue('hero_imageSize', 'cover'),
     overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
@@ -459,15 +459,15 @@ export default function Plumbing4({ business, customization }: Props) {
         <section id="services" className="py-20 px-6 bg-gray-50">
           <div className="max-w-6xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-8" style={{ color: primaryColor }}>
-              {business.name} Services
+              Services
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
               {/* Service 1: Emergency Plumbing */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
                 <div className="text-4xl mb-4">🚨</div>
-                <h3 className="text-xl font-bold mb-3">{business.name} - Emergency Plumbing</h3>
+                <h3 className="text-xl font-bold mb-3">Emergency Plumbing</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  {business.name} offers 24/7 emergency plumbing services for urgent issues like burst pipes, severe leaks, and overflowing toilets. We are available day or night to address your critical plumbing needs.
+                  24/7 emergency plumbing for urgent issues like burst pipes, severe leaks, and overflowing toilets. We are available day or night to address your critical plumbing needs.
                 </p>
                 <a
                   href={`tel:${business.phone}`}
@@ -484,11 +484,11 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Service 2: Drain Cleaning */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
                 <div className="text-4xl mb-4">
-                  <img src="https://media.istockphoto.com/id/874169110/photo/plumber-installs-a-new-siphon.jpg?s=612x612&w=0&k=20&c=NfTPoT63YEiEXqvxhmRKNfWJz-PtG2Gy3wo4xXg18CQ=" alt="Drain Cleaning Icon" className="w-12 h-12 object-contain"/>
+                  <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200" alt="Drain Cleaning" className="w-24 h-24 object-cover rounded-md"/>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{business.name} - Drain Cleaning</h3>
+                <h3 className="text-xl font-bold mb-3">Drain Cleaning</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Clogged drains are no match for {business.name}. We use professional equipment to clear blockages in sinks, showers, and main sewer lines, ensuring smooth water flow throughout your property.
+                  Clogged drains are no match for us. We use professional equipment to clear blockages in sinks, showers, and main sewer lines, ensuring smooth water flow.
                 </p>
                 <a
                   href={`tel:${business.phone}`}
@@ -505,9 +505,9 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Service 3: Water Heater Services */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
                 <div className="text-4xl mb-4">🔥</div>
-                <h3 className="text-xl font-bold mb-3">{business.name} - Water Heater Services</h3>
+                <h3 className="text-xl font-bold mb-3">Water Heater Services</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  From installation to repair and maintenance, {business.name} ensures your water heater is always running efficiently. Enjoy reliable hot water with our expert services for all major brands.
+                  From installation to repair and maintenance, we ensure your water heater runs efficiently. Enjoy reliable hot water with our expert services for all major brands.
                 </p>
                 <a
                   href={`tel:${business.phone}`}
@@ -524,9 +524,9 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Service 4: Leak Detection */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
                 <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-xl font-bold mb-3">{business.name} - Leak Detection</h3>
+                <h3 className="text-xl font-bold mb-3">Leak Detection</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Undetected leaks can cause significant damage. {business.name} uses advanced technology to pinpoint hidden leaks in pipes, walls, and foundations, preventing costly repairs and water waste.
+                  Undetected leaks cause damage. We use advanced technology to pinpoint hidden leaks in pipes, walls, and foundations, preventing costly repairs and water waste.
                 </p>
                 <a
                   href={`tel:${business.phone}`}
@@ -543,9 +543,9 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Service 5: Fixture Installation */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
                 <div className="text-4xl mb-4">🔧</div>
-                <h3 className="text-xl font-bold mb-3">{business.name} - Fixture Installation</h3>
+                <h3 className="text-xl font-bold mb-3">Fixture Installation</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Upgrade your kitchen or bathroom with professional fixture installation from {business.name}. We expertly install faucets, sinks, toilets, and more, ensuring perfect fit and function.
+                  Upgrade your kitchen or bathroom with professional fixture installation. We expertly install faucets, sinks, toilets, and more, ensuring perfect fit and function.
                 </p>
                 <a
                   href={`tel:${business.phone}`}
@@ -562,9 +562,9 @@ export default function Plumbing4({ business, customization }: Props) {
               {/* Service 6: Pipe Repair */}
               <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md hover-lift">
                 <div className="text-4xl mb-4">🛠️</div>
-                <h3 className="text-xl font-bold mb-3">{business.name} - Pipe Repair</h3>
+                <h3 className="text-xl font-bold mb-3">Pipe Repair</h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                  Damaged pipes? {business.name} provides reliable pipe repair services, addressing everything from minor leaks to major pipe replacements, ensuring the integrity of your plumbing system.
+                  Damaged pipes? We provide reliable pipe repair services, addressing everything from minor leaks to major pipe replacements, ensuring the integrity of your plumbing system.
                 </p>
                 <a
                   href={`tel:${business.phone}`}
