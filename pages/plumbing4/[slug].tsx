@@ -707,17 +707,218 @@ export default function Plumbing4({ business, customization }: Props) {
           </div>
         </section>
 
-        <section id="contact" className="py-20 px-6 bg-gray-900 text-white">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
-            <p className="text-xl mb-4">{business.phone}</p>
-            {business.email_1 && (
-              <p className="text-lg mb-2">{business.email_1}</p>
-            )}
-            <p className="text-gray-400">{business.full_address}</p>
-            {business.working_hours && (
-              <p className="text-gray-400 mt-2">{business.working_hours}</p>
-            )}
+        {/* Contact Section */}
+        <section id="contact" className="py-20 px-6 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: primaryColor }}>
+                Contact Us Today
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                Ready to solve your plumbing problems? Get in touch with {business.name} for fast, reliable service.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Contact Information Side */}
+              <div className="space-y-8">
+                {/* Main Contact Card */}
+                <div className="bg-white p-8 rounded-xl shadow-lg">
+                  <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
+                    Get in Touch
+                  </h3>
+                  
+                  {/* Phone */}
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      📞
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Call Us</h4>
+                      <a 
+                        href={`tel:${business.phone}`}
+                        className="text-xl font-bold hover:underline"
+                        style={{ color: primaryColor }}
+                      >
+                        {business.phone}
+                      </a>
+                      <p className="text-sm text-gray-600">Available 24/7 for emergencies</p>
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      ✉️
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Email Us</h4>
+                      <a 
+                        href={`mailto:${business.email_1 || 'info@' + business.name.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com'}`}
+                        className="text-lg hover:underline"
+                        style={{ color: primaryColor }}
+                      >
+                        {business.email_1 || 'info@' + business.name.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com'}
+                      </a>
+                      <p className="text-sm text-gray-600">We'll respond within 2 hours</p>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="flex items-start space-x-4 mb-6">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      📍
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Service Area</h4>
+                      <p className="text-gray-600">{business.full_address}</p>
+                      <p className="text-sm text-gray-500">Serving {business.city} and surrounding areas</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Working Hours Card */}
+                {business.working_hours && (
+                  <div className="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
+                      Business Hours
+                    </h3>
+                    <div className="flex items-start space-x-4">
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
+                        style={{ backgroundColor: primaryColor }}
+                      >
+                        🕒
+                      </div>
+                      <div>
+                        <p className="text-lg text-gray-900 whitespace-pre-line">{business.working_hours}</p>
+                        <p className="text-sm text-red-600 font-semibold mt-2">
+                          Emergency services available 24/7
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Social Media Card - Only show if we have social media */}
+                {(business.instagram || business.facebook) && (
+                  <div className="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
+                      Follow Us
+                    </h3>
+                    <div className="flex space-x-4">
+                      {business.facebook && (
+                        <a 
+                          href={business.facebook.startsWith('http') ? business.facebook : `https://facebook.com/${business.facebook}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-3 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                          <span className="text-xl">👥</span>
+                          <span className="font-semibold">Facebook</span>
+                        </a>
+                      )}
+                      {business.instagram && (
+                        <a 
+                          href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center space-x-3 bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors"
+                        >
+                          <span className="text-xl">📸</span>
+                          <span className="font-semibold">Instagram</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick CTA */}
+                <div className="bg-white p-8 rounded-xl shadow-lg text-center border-2" style={{ borderColor: primaryColor }}>
+                  <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
+                    Need Service Now?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Don't wait - plumbing problems get worse over time. Call us now for fast, professional service.
+                  </p>
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="inline-flex items-center px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift space-x-3"
+                    style={{
+                      backgroundColor: primaryColor,
+                      color: 'white'
+                    }}
+                  >
+                    <span>📞</span>
+                    <span>Call {business.phone}</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Map Side */}
+              <div className="space-y-6">
+                {/* Service Area Map */}
+                <div className="bg-white p-8 rounded-xl shadow-lg h-[600px]">
+                  <h3 className="text-2xl font-bold mb-6" style={{ color: primaryColor }}>
+                    Our Service Area
+                  </h3>
+                  
+                  {/* Google Maps Embed - Using business address */}
+                  <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      scrolling="no"
+                      marginHeight={0}
+                      marginWidth={0}
+                      src={`https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodeURIComponent(business.full_address)}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
+                      title={`${business.name} Service Area Map`}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  
+                  {/* Service Area Info */}
+                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold mb-2" style={{ color: primaryColor }}>
+                      Areas We Serve:
+                    </h4>
+                    <p className="text-gray-600 text-sm">
+                      {business.city}, {business.state} and surrounding communities within a 25-mile radius
+                    </p>
+                  </div>
+                </div>
+
+                {/* Trust Indicators */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div className="text-3xl mb-2">⭐</div>
+                    <div className="text-2xl font-bold" style={{ color: primaryColor }}>
+                      {business.rating}/5
+                    </div>
+                    <div className="text-sm text-gray-600">{business.reviews} Reviews</div>
+                  </div>
+
+                  <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div className="text-3xl mb-2">🛡️</div>
+                    <div className="text-lg font-bold" style={{ color: primaryColor }}>
+                      Licensed
+                    </div>
+                    <div className="text-sm text-gray-600">& Insured</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>
