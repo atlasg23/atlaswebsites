@@ -888,6 +888,236 @@ export default function Plumbing4({ business, customization }: Props) {
             </div>
           </div>
         </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-900 text-white py-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+              {/* Company Info */}
+              <div className="lg:col-span-2">
+                <h3 className="text-2xl font-bold mb-4" style={{ color: primaryColor }}>
+                  {business.name}
+                </h3>
+                <p className="text-gray-400 mb-6 leading-relaxed max-w-md">
+                  Your trusted plumbing professionals serving {business.city}, {business.state} and surrounding areas. 
+                  Licensed, insured, and committed to quality service.
+                </p>
+                
+                {/* Contact Info */}
+                <div className="space-y-3 mb-6">
+                  <a 
+                    href={`tel:${business.phone}`}
+                    className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors"
+                  >
+                    <span>📞</span>
+                    <span>{business.phone}</span>
+                  </a>
+                  
+                  {business.email_1 && (
+                    <a 
+                      href={`mailto:${business.email_1}`}
+                      className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors"
+                    >
+                      <span>✉️</span>
+                      <span>{business.email_1}</span>
+                    </a>
+                  )}
+                  
+                  <div className="flex items-center space-x-3 text-gray-400">
+                    <span>📍</span>
+                    <span>{business.city}, {business.state}</span>
+                  </div>
+                </div>
+
+                {/* Social Links - Only show if available */}
+                {(business.facebook || business.instagram) && (
+                  <div className="flex space-x-4">
+                    {business.facebook && (
+                      <a
+                        href={business.facebook.startsWith('http') ? business.facebook : `https://facebook.com/${business.facebook}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-blue-400 transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition-colors">
+                          👥
+                        </div>
+                      </a>
+                    )}
+                    {business.instagram && (
+                      <a
+                        href={business.instagram.startsWith('http') ? business.instagram : `https://instagram.com/${business.instagram}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-pink-400 transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-colors">
+                          📸
+                        </div>
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Services */}
+              <div>
+                <h4 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>
+                  Our Services
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Emergency Plumbing
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Drain Cleaning
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Water Heater Service
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Pipe Repair
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Fixture Installation
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Sewer Line Services
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Quick Links */}
+              <div>
+                <h4 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>
+                  Quick Links
+                </h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a href="#about" className="text-gray-400 hover:text-white transition-colors">
+                      About Us
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                      Services
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#contact" className="text-gray-400 hover:text-white transition-colors">
+                      Contact
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`tel:${business.phone}`} className="text-gray-400 hover:text-white transition-colors">
+                      Emergency Service
+                    </a>
+                  </li>
+                </ul>
+
+                {/* Business Hours */}
+                {business.working_hours && (
+                  <div className="mt-6">
+                    <h5 className="font-medium mb-2">Business Hours</h5>
+                    <div className="text-sm text-gray-400">
+                      {(() => {
+                        try {
+                          const hours = JSON.parse(business.working_hours);
+                          const todayKey = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date().getDay()];
+                          return (
+                            <div>
+                              <div className="font-medium text-gray-300">
+                                Today: {hours[todayKey] || 'Closed'}
+                              </div>
+                              <div className="text-xs mt-1">
+                                <a href="#contact" className="hover:text-white transition-colors">
+                                  View all hours
+                                </a>
+                              </div>
+                            </div>
+                          );
+                        } catch {
+                          return (
+                            <div>
+                              <a href="#contact" className="hover:text-white transition-colors">
+                                View hours
+                              </a>
+                            </div>
+                          );
+                        }
+                      })()}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Trust Indicators Row */}
+            <div className="flex flex-col sm:flex-row items-center justify-between py-6 border-t border-gray-800">
+              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 mb-4 sm:mb-0">
+                {/* License Badge */}
+                <div className="flex items-center space-x-2 text-gray-400">
+                  <span>🛡️</span>
+                  <span className="text-sm">Licensed & Insured</span>
+                </div>
+
+                {/* Rating */}
+                {parseFloat(business.rating) >= 4.5 && (
+                  <div className="flex items-center space-x-2 text-gray-400">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`text-yellow-400 text-sm ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <span className="text-sm">{business.rating}/5 ({business.reviews} reviews)</span>
+                  </div>
+                )}
+
+                {/* Emergency Service */}
+                <div className="flex items-center space-x-2 text-gray-400">
+                  <span>🚨</span>
+                  <span className="text-sm">24/7 Emergency Service</span>
+                </div>
+              </div>
+
+              {/* Emergency Call Button */}
+              <a
+                href={`tel:${business.phone}`}
+                className="px-6 py-3 rounded-full font-bold transition-all hover-lift"
+                style={{
+                  backgroundColor: primaryColor,
+                  color: 'white'
+                }}
+              >
+                📞 Emergency Call
+              </a>
+            </div>
+
+            {/* Copyright */}
+            <div className="border-t border-gray-800 pt-6 text-center text-gray-500">
+              <p>
+                © {new Date().getFullYear()} {business.name}. All rights reserved.
+                {business.city && business.state && (
+                  <span> • Proudly serving {business.city}, {business.state}</span>
+                )}
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );
