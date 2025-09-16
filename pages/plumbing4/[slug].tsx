@@ -1,0 +1,429 @@
+
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { getBusinessBySlug, PlumbingBusiness } from '../../lib/supabaseReader';
+import { getTemplateCustomization, TemplateCustomization } from '../../lib/templateCustomizations';
+
+interface Props {
+  business: PlumbingBusiness;
+  customization: TemplateCustomization | null;
+}
+
+export default function Plumbing4({ business, customization }: Props) {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    // Check if mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Handle scroll for navbar
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Get device-specific value
+  const getDeviceValue = (key: string, defaultValue: any) => {
+    const suffix = isMobile ? '_mobile' : '_desktop';
+    const deviceKey = `${key}${suffix}`;
+
+    // Try device-specific value first
+    const deviceValue = customization?.custom_images?.[deviceKey] ||
+                       customization?.custom_text?.[deviceKey] ||
+                       customization?.custom_colors?.[deviceKey] ||
+                       customization?.custom_styles?.[deviceKey] ||
+                       customization?.custom_buttons?.[deviceKey];
+
+    // Fall back to base value if device-specific doesn't exist
+    if (deviceValue !== undefined) return deviceValue;
+
+    return customization?.custom_images?.[key] ||
+           customization?.custom_text?.[key] ||
+           customization?.custom_colors?.[key] ||
+           customization?.custom_styles?.[key] ||
+           customization?.custom_buttons?.[key] ||
+           defaultValue;
+  };
+
+  // Replace placeholders with actual business data
+  const replacePlaceholders = (text: string) => {
+    if (!text) return '';
+    return text
+      .replace(/{business_name}/gi, business.name)
+      .replace(/{city}/gi, business.city)
+      .replace(/{state}/gi, business.state)
+      .replace(/{phone}/gi, business.phone)
+      .replace(/{email}/gi, business.email_1 || '')
+      .replace(/{address}/gi, business.full_address)
+      .replace(/{rating}/gi, business.rating)
+      .replace(/{reviews}/gi, business.reviews);
+  };
+
+  // Primary colors
+  const primaryColor = business.primary_color || '#1E40AF';
+  const secondaryColor = business.secondary_color || '#3B82F6';
+
+  // Hero data with all customizations
+  const heroData = {
+    // Image settings
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1920&q=80'),
+    imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
+    imageSize: getDeviceValue('hero_imageSize', 'cover'),
+    overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
+
+    // Headline
+    headline: getDeviceValue('hero_headline', `Expert Plumbing Services in ${business.city}`),
+    headlineColor: getDeviceValue('hero_headlineColor', '#FFFFFF'),
+
+    // Subheadline
+    subheadline: getDeviceValue('hero_subheadline', `Licensed & Insured • ${business.rating}★ Rating • Available 24/7`),
+    subheadlineColor: getDeviceValue('hero_subheadlineColor', '#F3F4F6'),
+
+    // Description
+    description: getDeviceValue('hero_description', `Professional plumbing solutions from {business_name}. Emergency repairs, installations, and maintenance services you can trust.`),
+    descriptionColor: getDeviceValue('hero_descriptionColor', '#E5E7EB'),
+
+    // Buttons
+    button1Text: getDeviceValue('hero_button1Text', 'Call Now'),
+    button1BgColor: getDeviceValue('hero_button1BgColor', primaryColor),
+    button1Color: getDeviceValue('hero_button1Color', '#FFFFFF'),
+
+    button2Text: getDeviceValue('hero_button2Text', 'Get Free Quote'),
+    button2BgColor: getDeviceValue('hero_button2BgColor', 'transparent'),
+    button2Color: getDeviceValue('hero_button2Color', '#FFFFFF'),
+  };
+
+  return (
+    <>
+      <Head>
+        <title>{`${replacePlaceholders(heroData.headline)} | ${business.name}`}</title>
+        <meta name="description" content={replacePlaceholders(heroData.description)} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+
+      <style jsx global>{`
+        :root {
+          --primary-color: ${primaryColor};
+          --secondary-color: ${secondaryColor};
+        }
+        
+        .hero-gradient {
+          background: linear-gradient(135deg, ${primaryColor}dd 0%, ${secondaryColor}dd 100%);
+        }
+        
+        .glass-effect {
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-lift {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .text-shadow {
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        
+        .nav-blur {
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.95);
+        }
+      `}</style>
+
+      <div className="min-h-screen bg-white">
+        {/* Navigation */}
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'nav-blur shadow-lg py-3' : 'bg-transparent py-4'
+        }`}>
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-center justify-between">
+              {/* Logo & Business Name */}
+              <div className="flex items-center space-x-4">
+                {business.logo && (
+                  <img 
+                    src={business.logo} 
+                    alt={business.name} 
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                )}
+                <div>
+                  <h1 className={`text-xl font-bold ${
+                    isScrolled ? 'text-gray-900' : 'text-white text-shadow'
+                  }`}>
+                    {business.name}
+                  </h1>
+                  <p className={`text-sm ${
+                    isScrolled ? 'text-gray-600' : 'text-gray-200'
+                  }`}>
+                    {business.city}, {business.state}
+                  </p>
+                </div>
+              </div>
+
+              {/* Navigation Links - Desktop */}
+              <div className="hidden md:flex items-center space-x-8">
+                <a href="#services" className={`font-medium hover:opacity-80 transition-opacity ${
+                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
+                }`}>
+                  Services
+                </a>
+                <a href="#about" className={`font-medium hover:opacity-80 transition-opacity ${
+                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
+                }`}>
+                  About
+                </a>
+                <a href="#contact" className={`font-medium hover:opacity-80 transition-opacity ${
+                  isScrolled ? 'text-gray-700' : 'text-white text-shadow'
+                }`}>
+                  Contact
+                </a>
+              </div>
+
+              {/* Call Button */}
+              <div className="flex items-center space-x-4">
+                {/* Rating Badge */}
+                <div className={`hidden sm:flex items-center space-x-1 px-3 py-1 rounded-full ${
+                  isScrolled ? 'bg-yellow-50 text-yellow-700' : 'glass-effect text-white'
+                }`}>
+                  <span className="text-yellow-400">★</span>
+                  <span className="text-sm font-semibold">{business.rating}</span>
+                  <span className="text-xs opacity-75">({business.reviews})</span>
+                </div>
+
+                {/* Phone Button */}
+                <a
+                  href={`tel:${business.phone}`}
+                  className="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-full font-semibold transition-all hover-lift flex items-center space-x-2"
+                  style={{ 
+                    background: isScrolled ? primaryColor : 'white',
+                    color: isScrolled ? 'white' : primaryColor
+                  }}
+                >
+                  <span>📞</span>
+                  <span>{business.phone}</span>
+                </a>
+
+                {/* Mobile Menu Button */}
+                <button className="md:hidden p-2">
+                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                  <div className={`w-6 h-0.5 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section
+          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+          style={{
+            backgroundImage: `url('${heroData.image}')`,
+            backgroundSize: heroData.imageSize,
+            backgroundPosition: heroData.imagePosition,
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          {/* Overlay with Gradient */}
+          <div 
+            className="absolute inset-0 hero-gradient"
+            style={{ opacity: heroData.overlayOpacity / 100 }}
+          />
+
+          {/* Floating Elements - Background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-20 left-10 w-20 h-20 bg-white bg-opacity-10 rounded-full animate-float" style={{ animationDelay: '0s' }}></div>
+            <div className="absolute top-40 right-20 w-16 h-16 bg-white bg-opacity-10 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute bottom-40 left-20 w-12 h-12 bg-white bg-opacity-10 rounded-full animate-float" style={{ animationDelay: '4s' }}></div>
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center">
+            <div className="max-w-4xl mx-auto">
+              {/* Trust Badge */}
+              <div className="inline-flex items-center space-x-4 glass-effect rounded-full px-6 py-3 mb-8">
+                <div className="flex items-center space-x-1">
+                  <span className="text-green-400">✓</span>
+                  <span className="text-white text-sm font-medium">Licensed & Insured</span>
+                </div>
+                <div className="w-px h-4 bg-white bg-opacity-30"></div>
+                <div className="flex items-center space-x-1">
+                  <span className="text-yellow-400">★</span>
+                  <span className="text-white text-sm font-medium">{business.rating} Rating</span>
+                </div>
+                <div className="w-px h-4 bg-white bg-opacity-30"></div>
+                <div className="flex items-center space-x-1">
+                  <span className="text-blue-400">⚡</span>
+                  <span className="text-white text-sm font-medium">24/7 Service</span>
+                </div>
+              </div>
+
+              {/* Main Headline */}
+              <h1 
+                className="text-5xl md:text-7xl font-bold mb-6 text-shadow leading-tight"
+                style={{ color: heroData.headlineColor }}
+              >
+                {replacePlaceholders(heroData.headline)}
+              </h1>
+
+              {/* Subheadline */}
+              <p 
+                className="text-xl md:text-2xl mb-8 text-shadow"
+                style={{ color: heroData.subheadlineColor }}
+              >
+                {replacePlaceholders(heroData.subheadline)}
+              </p>
+
+              {/* Description */}
+              <p 
+                className="text-lg mb-12 max-w-2xl mx-auto leading-relaxed"
+                style={{ color: heroData.descriptionColor }}
+              >
+                {replacePlaceholders(heroData.description)}
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                {/* Primary CTA */}
+                <a
+                  href={`tel:${business.phone}`}
+                  className="group relative overflow-hidden px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift"
+                  style={{
+                    backgroundColor: heroData.button1BgColor,
+                    color: heroData.button1Color
+                  }}
+                >
+                  <div className="absolute inset-0 bg-white bg-opacity-20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                  <div className="relative flex items-center space-x-3">
+                    <span>📞</span>
+                    <span>{heroData.button1Text}</span>
+                  </div>
+                </a>
+
+                {/* Secondary CTA */}
+                <button
+                  className="group px-8 py-4 rounded-full font-bold text-lg border-2 border-white transition-all hover-lift glass-effect"
+                  style={{
+                    backgroundColor: heroData.button2BgColor,
+                    color: heroData.button2Color,
+                    borderColor: heroData.button2Color
+                  }}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span>💬</span>
+                    <span>{heroData.button2Text}</span>
+                  </div>
+                </button>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white text-shadow mb-2">{business.reviews}+</div>
+                  <div className="text-gray-200 text-sm">Happy Customers</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white text-shadow mb-2">24/7</div>
+                  <div className="text-gray-200 text-sm">Emergency Service</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white text-shadow mb-2">100%</div>
+                  <div className="text-gray-200 text-sm">Satisfaction</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <div className="flex flex-col items-center space-y-2">
+              <span className="text-sm opacity-75">Scroll to explore</span>
+              <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+                <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Placeholder for future sections */}
+        <section id="services" className="py-20 px-6 bg-gray-50">
+          <div className="max-w-6xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4" style={{ color: primaryColor }}>
+              Our Services
+            </h2>
+            <p className="text-gray-600">Services section coming soon...</p>
+          </div>
+        </section>
+
+        <section id="about" className="py-20 px-6">
+          <div className="max-w-6xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4" style={{ color: primaryColor }}>
+              About {business.name}
+            </h2>
+            <p className="text-gray-600">About section coming soon...</p>
+          </div>
+        </section>
+
+        <section id="contact" className="py-20 px-6 bg-gray-900 text-white">
+          <div className="max-w-6xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
+            <p className="text-xl mb-4">{business.phone}</p>
+            {business.email_1 && (
+              <p className="text-lg mb-2">{business.email_1}</p>
+            )}
+            <p className="text-gray-400">{business.full_address}</p>
+            {business.working_hours && (
+              <p className="text-gray-400 mt-2">{business.working_hours}</p>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const slug = params?.slug as string;
+
+  const business = await getBusinessBySlug(slug);
+  if (!business) {
+    return { notFound: true };
+  }
+
+  const customization = await getTemplateCustomization(slug);
+
+  return {
+    props: {
+      business,
+      customization
+    }
+  };
+};
