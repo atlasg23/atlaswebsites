@@ -209,15 +209,6 @@ export default function Plumbing4({ business, customization }: Props) {
 
               {/* Call Button */}
               <div className="flex items-center space-x-4">
-                {/* Rating Badge */}
-                <div className={`hidden sm:flex items-center space-x-1 px-3 py-1 rounded-full ${
-                  isScrolled ? 'bg-yellow-50 text-yellow-700' : 'glass-effect text-white'
-                }`}>
-                  <span className="text-yellow-400">★</span>
-                  <span className="text-sm font-semibold">{business.rating}</span>
-                  <span className="text-xs opacity-75">({business.reviews})</span>
-                </div>
-
                 {/* Phone Button */}
                 <a
                   href={`tel:${business.phone}`}
@@ -268,24 +259,6 @@ export default function Plumbing4({ business, customization }: Props) {
           {/* Content */}
           <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center">
             <div className="max-w-4xl mx-auto">
-              {/* Trust Badge */}
-              <div className="inline-flex items-center space-x-4 glass-effect rounded-full px-6 py-3 mb-8">
-                <div className="flex items-center space-x-1">
-                  <span className="text-green-400">✓</span>
-                  <span className="text-white text-sm font-medium">Licensed & Insured</span>
-                </div>
-                <div className="w-px h-4 bg-white bg-opacity-30"></div>
-                <div className="flex items-center space-x-1">
-                  <span className="text-yellow-400">★</span>
-                  <span className="text-white text-sm font-medium">{business.rating} Rating</span>
-                </div>
-                <div className="w-px h-4 bg-white bg-opacity-30"></div>
-                <div className="flex items-center space-x-1">
-                  <span className="text-blue-400">⚡</span>
-                  <span className="text-white text-sm font-medium">24/7 Service</span>
-                </div>
-              </div>
-
               {/* Main Headline */}
               <h1 
                 className="text-5xl md:text-7xl font-bold mb-6 text-shadow leading-tight"
@@ -342,22 +315,6 @@ export default function Plumbing4({ business, customization }: Props) {
                     <span>{heroData.button2Text}</span>
                   </div>
                 </button>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white text-shadow mb-2">{business.reviews}+</div>
-                  <div className="text-gray-200 text-sm">Happy Customers</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white text-shadow mb-2">24/7</div>
-                  <div className="text-gray-200 text-sm">Emergency Service</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white text-shadow mb-2">100%</div>
-                  <div className="text-gray-200 text-sm">Satisfaction</div>
-                </div>
               </div>
             </div>
           </div>
