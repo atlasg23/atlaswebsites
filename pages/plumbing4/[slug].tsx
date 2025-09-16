@@ -108,7 +108,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Image settings
-    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200'),
+    image: getDeviceValue('hero_image', 'https://assets.cdn.filesafe.space/A9rd4HdLD0sTvRuuQFZl/media/651501775cf2e93f16638cf9.jpeg'),
     imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
     imageSize: getDeviceValue('hero_imageSize', 'cover'),
     overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
@@ -246,7 +246,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
             <div className="md:hidden">
               <div className="flex items-center justify-between">
                 {/* Business Name */}
-                <div>
+                <div className="text-center">
                   <h1 className={`text-lg font-bold ${
                     isScrolled ? 'text-gray-900' : 'text-white text-shadow'
                   }`}>
@@ -255,7 +255,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                   <p className={`text-sm ${
                     isScrolled ? 'text-gray-600' : 'text-gray-200'
                   }`}>
-                    {business.city}, {business.state}
+                    {business.phone} • {business.city}, {business.state}
                   </p>
                 </div>
 
@@ -294,7 +294,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
             <div className="hidden md:flex items-center justify-between">
               {/* Business Name & Info */}
               <div className="flex items-center space-x-6">
-                <div>
+                <div className="text-center">
                   <h1 className={`text-xl font-bold ${
                     isScrolled ? 'text-gray-900' : 'text-white text-shadow'
                   }`}>
@@ -303,7 +303,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                   <p className={`text-sm ${
                     isScrolled ? 'text-gray-600' : 'text-gray-200'
                   }`}>
-                    Professional Plumbing Services • {business.city}, {business.state}
+                    {business.phone} • Professional Plumbing Services • {business.city}, {business.state}
                   </p>
                 </div>
 
@@ -599,9 +599,9 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                     {getDeviceValue('service1_title', 'Emergency Plumbing')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service1_description', 'Available 24/7 for urgent plumbing emergencies in {city} and surrounding areas. Fast response times and expert solutions when you need them most.'))}
+                    {replacePlaceholders(getDeviceValue('service1_description', 'Trust {business_name} for urgent plumbing emergencies in {city} and surrounding areas. Our team at {business_name} provides fast response times and expert solutions when you need them most.'))}
                   </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
+                  <ul className="space-y-2 text-sm text-gray-600 mb-4">
                     <li className="flex items-center">
                       <span className="text-green-500 mr-2">✓</span>
                       24/7 Emergency Service
@@ -615,6 +615,16 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                       Water Leak Detection
                     </li>
                   </ul>
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="inline-flex items-center px-4 py-2 rounded-lg font-semibold text-white transition-all hover:opacity-90"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    Call Now {business.phone}
+                  </a>
                 </div>
               </div>
 
@@ -633,7 +643,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                     {getDeviceValue('service2_title', 'Drain Cleaning')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service2_description', 'Professional drain cleaning services for residential and commercial properties in {city} and surrounding areas to clear clogs and keep your plumbing flowing smoothly.'))}
+                    {replacePlaceholders(getDeviceValue('service2_description', 'Choose {business_name} for professional drain cleaning services for residential and commercial properties in {city} and surrounding areas. Our expert team at {business_name} clears clogs and keeps your plumbing flowing smoothly.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -667,9 +677,9 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                     {getDeviceValue('service3_title', 'Water Heater Services')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service3_description', 'Complete water heater installation, repair, and maintenance for both tank and tankless systems. Serving residential and commercial clients throughout {city}.'))}
+                    {replacePlaceholders(getDeviceValue('service3_description', 'Trust {business_name} for complete water heater installation, repair, and maintenance for both tank and tankless systems. {business_name} serves residential and commercial clients throughout {city}.'))}
                   </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
+                  <ul className="space-y-2 text-sm text-gray-600 mb-4">
                     <li className="flex items-center">
                       <span className="text-green-500 mr-2">✓</span>
                       Installation & Replacement
@@ -683,6 +693,16 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                       Annual Maintenance
                     </li>
                   </ul>
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="inline-flex items-center px-4 py-2 rounded-lg font-semibold text-white transition-all hover:opacity-90"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    Call Now {business.phone}
+                  </a>
                 </div>
               </div>
 
@@ -701,7 +721,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                     {getDeviceValue('service4_title', 'Pipe Repair & Replacement')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {getDeviceValue('service4_description', 'Expert pipe repair and replacement using modern materials and techniques for lasting solutions.')}
+                    {replacePlaceholders(getDeviceValue('service4_description', 'Contact {business_name} for expert pipe repair and replacement using modern materials and techniques. Our skilled professionals at {business_name} provide lasting solutions for all your pipe needs.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
@@ -735,9 +755,9 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                     {getDeviceValue('service5_title', 'Fixture Installation')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {replacePlaceholders(getDeviceValue('service5_description', 'Professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures. Expert handling of both residential and commercial installations.'))}
+                    {replacePlaceholders(getDeviceValue('service5_description', 'Call {business_name} for professional installation of faucets, toilets, sinks, showers, and other plumbing fixtures. The experts at {business_name} provide quality handling of both residential and commercial installations.'))}
                   </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
+                  <ul className="space-y-2 text-sm text-gray-600 mb-4">
                     <li className="flex items-center">
                       <span className="text-green-500 mr-2">✓</span>
                       Faucets & Sinks
@@ -751,6 +771,16 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                       Shower & Tub Systems
                     </li>
                   </ul>
+                  <a
+                    href={`tel:${business.phone}`}
+                    className="inline-flex items-center px-4 py-2 rounded-lg font-semibold text-white transition-all hover:opacity-90"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    Call Now {business.phone}
+                  </a>
                 </div>
               </div>
 
@@ -769,7 +799,7 @@ export default function Plumbing4({ business, customization, reviews }: Props) {
                     {getDeviceValue('service6_title', 'Sewer Line Services')}
                   </h3>
                   <p className="text-gray-600 mb-4 leading-relaxed">
-                    {getDeviceValue('service6_description', 'Complete sewer line inspection, cleaning, and repair services using advanced technology.')}
+                    {replacePlaceholders(getDeviceValue('service6_description', 'Rely on {business_name} for complete sewer line inspection, cleaning, and repair services using advanced technology. The experienced team at {business_name} handles all your sewer line needs professionally.'))}
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-center">
