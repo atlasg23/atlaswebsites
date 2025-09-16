@@ -159,8 +159,64 @@ export default function Plumbing4({ business, customization }: Props) {
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'nav-blur shadow-lg py-3' : 'bg-transparent py-4'
         }`}>
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4">
+            {/* Mobile Layout */}
+            <div className="md:hidden">
+              {/* Top Row: Business Name */}
+              <div className="flex items-center justify-between mb-2">
+                <h1 className={`text-lg font-bold ${
+                  isScrolled ? 'text-gray-900' : 'text-white text-shadow'
+                }`}>
+                  {business.name}
+                </h1>
+                <button className="p-2">
+                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                  <div className={`w-6 h-0.5 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
+                </button>
+              </div>
+              
+              {/* Bottom Row: Rating and Phone */}
+              <div className="flex items-center justify-between">
+                {/* Rating Display - Show only if 4.5+ stars */}
+                {parseFloat(business.rating) >= 4.5 ? (
+                  <div className={`flex items-center space-x-2 ${
+                    isScrolled ? 'text-gray-700' : 'text-white'
+                  }`}>
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} className={`text-yellow-400 text-sm ${i < Math.floor(parseFloat(business.rating)) ? '' : 'opacity-30'}`}>
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    {/* Show count only if 10+ reviews */}
+                    {parseInt(business.reviews) >= 10 && (
+                      <span className="text-xs font-medium">
+                        {business.rating} ({business.reviews})
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+
+                {/* Phone Button */}
+                <a
+                  href={`tel:${business.phone}`}
+                  className="px-4 py-2 rounded-full font-semibold text-sm transition-all"
+                  style={{ 
+                    backgroundColor: primaryColor,
+                    color: 'white'
+                  }}
+                >
+                  {business.phone}
+                </a>
+              </div>
+            </div>
+
+            {/* Desktop Layout */}
+            <div className="hidden md:flex items-center justify-between">
               {/* Business Name & Info */}
               <div className="flex items-center space-x-6">
                 <div>
@@ -198,8 +254,8 @@ export default function Plumbing4({ business, customization }: Props) {
                 )}
               </div>
 
-              {/* Navigation Links - Desktop */}
-              <div className="hidden md:flex items-center space-x-8">
+              {/* Navigation Links */}
+              <div className="flex items-center space-x-8">
                 <a href="#services" className={`font-medium hover:opacity-80 transition-opacity ${
                   isScrolled ? 'text-gray-700' : 'text-white text-shadow'
                 }`}>
@@ -215,10 +271,7 @@ export default function Plumbing4({ business, customization }: Props) {
                 }`}>
                   Contact
                 </a>
-              </div>
 
-              {/* Call Button */}
-              <div className="flex items-center space-x-4">
                 {/* Phone Button */}
                 <a
                   href={`tel:${business.phone}`}
@@ -231,13 +284,6 @@ export default function Plumbing4({ business, customization }: Props) {
                   <span>📞</span>
                   <span>{business.phone}</span>
                 </a>
-
-                {/* Mobile Menu Button */}
-                <button className="md:hidden p-2">
-                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
-                  <div className={`w-6 h-0.5 mb-1 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
-                  <div className={`w-6 h-0.5 ${isScrolled ? 'bg-gray-900' : 'bg-white'}`}></div>
-                </button>
               </div>
             </div>
           </div>
@@ -264,23 +310,15 @@ export default function Plumbing4({ business, customization }: Props) {
             <div className="max-w-4xl mx-auto">
               {/* Main Headline */}
               <h1 
-                className="text-5xl md:text-7xl font-bold mb-6 text-shadow leading-tight"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-shadow leading-tight"
                 style={{ color: heroData.headlineColor }}
               >
                 {replacePlaceholders(heroData.headline)}
               </h1>
 
-              {/* Subheadline */}
-              <p 
-                className="text-xl md:text-2xl mb-8 text-shadow"
-                style={{ color: heroData.subheadlineColor }}
-              >
-                {replacePlaceholders(heroData.subheadline)}
-              </p>
-
               {/* Description */}
               <p 
-                className="text-lg mb-12 max-w-2xl mx-auto leading-relaxed"
+                className="text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed"
                 style={{ color: heroData.descriptionColor }}
               >
                 {replacePlaceholders(heroData.description)}
@@ -291,28 +329,28 @@ export default function Plumbing4({ business, customization }: Props) {
                 {/* Primary CTA */}
                 <a
                   href={`tel:${business.phone}`}
-                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift"
+                  className="px-8 py-4 rounded-full font-bold text-lg transition-all hover-lift w-full sm:w-auto"
                   style={{
                     backgroundColor: primaryColor,
                     color: 'white'
                   }}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center justify-center space-x-3">
                     <span>📞</span>
-                    <span>{business.phone}</span>
+                    <span>Call {business.phone}</span>
                   </div>
                 </a>
 
                 {/* Secondary CTA */}
                 <button
-                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift"
+                  className="px-8 py-4 rounded-full font-bold text-lg border-2 transition-all hover-lift w-full sm:w-auto"
                   style={{
                     backgroundColor: 'transparent',
                     color: 'white',
                     borderColor: secondaryColor
                   }}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center justify-center space-x-3">
                     <span>💬</span>
                     <span>{heroData.button2Text}</span>
                   </div>
