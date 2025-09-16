@@ -342,24 +342,13 @@ export default function Leeds2({ businesses, totalCount }: Props) {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        <div className="flex gap-2">
+                        <div className="flex gap-1 items-center">
                           <Link
-                            href={`/plumbing1/${business.slug}`}
-                            className="text-blue-600 hover:underline text-xs"
+                            href={`/plumbing4/${business.slug}`}
+                            className="px-2 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded text-xs font-medium transition-colors"
+                            title="View Template"
                           >
-                            T1
-                          </Link>
-                          <Link
-                            href={`/plumbing2/${business.slug}`}
-                            className="text-green-600 hover:underline text-xs"
-                          >
-                            T2
-                          </Link>
-                          <Link
-                            href={`/editor-v3/${business.slug}`}
-                            className="text-purple-600 hover:underline text-xs font-semibold"
-                          >
-                            ⚙️
+                            View
                           </Link>
                         </div>
                       </td>
