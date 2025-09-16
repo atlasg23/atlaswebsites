@@ -18,7 +18,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Apify configuration
 const APIFY_TOKEN = 'apify_api_DrC4qdJIT1ethXdgpU2tEqZeaobP0h4EfLZ3';
 const APIFY_ACTOR_ID = 'compass~google-maps-reviews-scraper';
-const MAX_BUSINESSES = 5;
+const MAX_BUSINESSES = 1;
 const MAX_REVIEWS_PER_BUSINESS = 10;
 
 async function delay(ms) {
@@ -29,11 +29,19 @@ async function startActorRun(placeId, businessName) {
   try {
     console.log(`\nStarting actor run for ${businessName}...`);
 
+    // Build a Google Maps search URL
+    const searchUrl = `https://www.google.com/maps/place/?q=place_id:${placeId}`;
+
     const input = {
-      queries: [placeId],
+      queries: [searchUrl],
       maxReviews: MAX_REVIEWS_PER_BUSINESS,
       reviewsSort: 'newest',
-      language: 'en'
+      language: 'en',
+      scrapeReviewId: true,
+      scrapeReviewUrl: true,
+      scrapeReviewPhoto: true,
+      scrapeReviewerName: true,
+      scrapeReviewerUrl: true
     };
 
     const response = await axios.post(
@@ -100,6 +108,11 @@ async function fetchReviewsForBusiness(placeId, businessName) {
     }
 
     console.log(`  Status: ${runInfo.status}`);
+
+    // Check for error message
+    if (runInfo.status === 'FAILED' && runInfo.statusMessage) {
+      console.log(`  Error: ${runInfo.statusMessage}`);
+    }
 
     if (runInfo.status === 'SUCCEEDED') {
       console.log('  Run completed successfully');

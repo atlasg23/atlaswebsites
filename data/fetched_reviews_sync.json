@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-09-16T12:38:32.674Z",
+  "businessesQueried": 5,
+  "totalReviewsFetched": 0,
+  "reviewsSaved": 0,
+  "businesses": [
+    {
+      "name": "Prestige Plumbing Repair, LLC",
+      "place_id": "ChIJs4jObM3iRgURrMS1fGBKvjs",
+      "reviewCount": 0
+    },
+    {
+      "name": "Prestige Plumbing Repair LLC",
+      "place_id": "ChIJj_d7X3xF-mQRC8d5AQxaCsE",
+      "reviewCount": 0
+    },
+    {
+      "name": "Nathan DeBusk Plumbing, LLC",
+      "place_id": "ChIJ4eLlflDidKsRVg1SXkQ_anE",
+      "reviewCount": 0
+    },
+    {
+      "name": "Superior Plumbing of Cenla",
+      "place_id": "ChIJkw2Mw7-tOoYRbLtzAkjISEQ",
+      "reviewCount": 0
+    },
+    {
+      "name": "Rad Plumbing LLC",
+      "place_id": "ChIJLz7x47HYFiARrab9ZlscYUw",
+      "reviewCount": 0
+    }
+  ],
+  "reviews": []
+}
