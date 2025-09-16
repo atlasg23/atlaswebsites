@@ -750,26 +750,27 @@ export default function Plumbing4({ business, customization }: Props) {
                     </div>
                   </div>
 
-                  {/* Email */}
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
-                      style={{ backgroundColor: primaryColor }}
-                    >
-                      ✉️
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Email Us</h4>
-                      <a 
-                        href={`mailto:${business.email_1 || 'info@' + business.name.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com'}`}
-                        className="text-lg hover:underline"
-                        style={{ color: primaryColor }}
+                  {/* Email - Only show if business has email */}
+                  {business.email_1 && (
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl"
+                        style={{ backgroundColor: primaryColor }}
                       >
-                        {business.email_1 || 'info@' + business.name.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com'}
-                      </a>
-                      <p className="text-sm text-gray-600">We'll respond within 2 hours</p>
+                        ✉️
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Email Us</h4>
+                        <a 
+                          href={`mailto:${business.email_1}`}
+                          className="text-lg hover:underline"
+                          style={{ color: primaryColor }}
+                        >
+                          {business.email_1}
+                        </a>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Address */}
                   <div className="flex items-start space-x-4 mb-6">
@@ -801,8 +802,12 @@ export default function Plumbing4({ business, customization }: Props) {
                         🕒
                       </div>
                       <div>
-                        <p className="text-lg text-gray-900 whitespace-pre-line">{business.working_hours}</p>
-                        <p className="text-sm text-red-600 font-semibold mt-2">
+                        <div className="text-lg text-gray-900">
+                          {business.working_hours.split('\n').map((line, index) => (
+                            <div key={index} className="mb-1">{line.trim()}</div>
+                          ))}
+                        </div>
+                        <p className="text-sm text-red-600 font-semibold mt-3">
                           Emergency services available 24/7
                         </p>
                       </div>
@@ -873,7 +878,7 @@ export default function Plumbing4({ business, customization }: Props) {
                     Our Service Area
                   </h3>
                   
-                  {/* Google Maps Embed - Using business address */}
+                  {/* Google Maps Embed - Using business coordinates or address */}
                   <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden">
                     <iframe
                       width="100%"
@@ -882,7 +887,10 @@ export default function Plumbing4({ business, customization }: Props) {
                       scrolling="no"
                       marginHeight={0}
                       marginWidth={0}
-                      src={`https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodeURIComponent(business.full_address)}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
+                      src={business.latitude && business.longitude ? 
+                        `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${business.latitude},${business.longitude}&t=&z=13&ie=UTF8&iwloc=&output=embed` :
+                        `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodeURIComponent(business.city + ', ' + business.state)}&t=&z=12&ie=UTF8&iwloc=&output=embed`
+                      }
                       title={`${business.name} Service Area Map`}
                       className="rounded-lg"
                     />
