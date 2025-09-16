@@ -78,7 +78,7 @@ export default function Plumbing4({ business, customization }: Props) {
   // Hero data with all customizations
   const heroData = {
     // Image settings
-    image: getDeviceValue('hero_image', 'https://media.istockphoto.com/id/874169110/photo/plumber-installs-a-new-siphon.jpg?s=612x612&w=0&k=20&c=NfTPoT63YEiEXqvxhmRKNfWJz-PtG2Gy3wo4xXg18CQ='),
+    image: getDeviceValue('hero_image', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=1200'),
     imagePosition: getDeviceValue('hero_imagePosition', 'center center'),
     imageSize: getDeviceValue('hero_imageSize', 'cover'),
     overlayOpacity: parseInt(getDeviceValue('hero_overlayOpacity', '60')),
